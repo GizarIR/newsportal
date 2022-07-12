@@ -4,36 +4,49 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
-class Author(User):
+class Author(models.Model):
     """
     Модель Author - объекты всех авторов, поля:
-    - cвязь «один к одному», с встроенной моделью пользователей User;
-    - рейтинг пользователя.
+        - cвязь «один к одному», с встроенной моделью пользователей User;
+        - рейтинг пользователя.
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    rating = models.SmallIntegerField(default=0)
+    author_user = models.OneToOneField(User, on_delete=models.CASCADE)
+    rating_author = models.SmallIntegerField(default=0)
 
+    def update_rating(self):
+        """
+        Обновляет рейтинг пользователя, переданный в аргумент этого метода.
+        состоит из:
+            - суммарный рейтинг каждой статьи автора умножается на 3;
+            - суммарный рейтинг всех комментариев автора;
+            - суммарный рейтинг всех комментариев к статьям автора.
+        """
+        # postRat = sum(map(int, list(Post.objects.filter(authorUser=self.id).values('rating'))))
+        # commentAuthorRat = sum(map(int, list(Comment.objects.filter(authorUser=self.id).values('rating'))))
+        # commentRat = self.author_user.comment_set.aggregate(commentRating=sum('rating_comment'))
+        # cRat = 0
+        # cRat += commentRat.get('commentRating')
+        pass
 
 class Category(models.Model):
     """
     Модель Category - nемы, которые они отражают (спорт, политика, образование и т. д.), поля:
-    - название категории, поле уникально
+        - название категории, поле уникально
     """
-    name = models.CharFields(max_lenght=64, unique=True)
+    name_category = models.CharField(max_length=64, unique=True)
 
 
 class Post(models.Model):
     """
     Модель Post - статьи и новости, поля:
-    - связь «один ко многим» с моделью Author;
-    - поле с выбором — «статья» или «новость»;
-    - автоматически добавляемая дата и время создания;
-    - связь «многие ко многим» с моделью Category (с дополнительной моделью PostCategory);
-    - заголовок статьи/новости;
-    - текст статьи/новости;
-    - рейтинг статьи/новости.
+        - связь «один ко многим» с моделью Author;
+        - поле с выбором — «статья» или «новость»;
+        - автоматически добавляемая дата и время создания;
+        - связь «многие ко многим» с моделью Category (с дополнительной моделью PostCategory);
+        - заголовок статьи/новости;
+        - текст статьи/новости;
+        - рейтинг статьи/новости.
     """
-
     news = 'NW'
     article = 'AR'
     POST_TYPES =[
@@ -41,39 +54,57 @@ class Post(models.Model):
         (article, 'Статья'),
     ]
 
-    author = models.ForeignKey('Author', on_delete=models.CASCADE)
-    post_type = models.CharFields(max_length=2,
+    author_user = models.ForeignKey('Author', on_delete=models.CASCADE)
+    post_type = models.CharField(max_length=2,
                                   choices=POST_TYPES,
                                   default=article)
     create_date = models.DateTimeField(auto_now_add=True)
     category = models.ManyToManyField('Category', through='PostCategory')
-    header = models.CharFields(max_length=128)
-    text = models.TextField()
-    rating = models.SmallIntegerField(default=0)
+    header_post = models.CharField(max_length=128)
+    text_post = models.TextField()
+    rating_post = models.SmallIntegerField(default=0)
+
+    def like(self):
+        self.rating_post += 1
+        self.save()
+
+    def dislike(self):
+        self.rating_post -= 1
+        self.save()
+
+    def preview(self):
+        return f'{self.text_post[0:123]} ...'
 
 
 class PostCategory(models.Model):
     """
     Модель PostCategory - промежуточная модель для связи «многие ко многим»:
-    - связь «один ко многим» с моделью Post;
-    - связь «один ко многим» с моделью Category.
+        - связь «один ко многим» с моделью Post;
+        - связь «один ко многим» с моделью Category.
     """
     throughPost = models.ForeignKey('Post', on_delete=models.CASCADE)
     throughCategory = models.ForeignKey('Category', on_delete=models.CASCADE)
 
 
-class Comment(models.Models):
+class Comment(models.Model):
     """
     Модель Comment - под каждой новостью/статьёй можно оставлять комментарии, поля:
-    - связь «один ко многим» с моделью Post;
-    - связь «один ко многим» со встроенной моделью User (комментарии может оставить необязательно автор);
-    - текст комментария;
-    - дата и время создания комментария;
-    - рейтинг комментария.
+        - связь «один ко многим» с моделью Post;
+        - связь «один ко многим» со встроенной моделью User (комментарии может оставить необязательно автор);
+        - текст комментария;
+        - дата и время создания комментария;
+        - рейтинг комментария.
     """
     post = models.ForeignKey('Post', on_delete=models.CASCADE)
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
-    text = models.TextField()
+    author_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text_comment = models.TextField()
     create_datetime = models.DateTimeField(auto_now_add=True)
-    rating = models.SmallIntegerField(default=0)
+    rating_comment = models.SmallIntegerField(default=0)
 
+    def like(self):
+        self.rating_comment += 1
+        self.save()
+
+    def dislike(self):
+        self.rating_comment -= 1
+        self.save()
