@@ -4,7 +4,6 @@ from django.db.models import Aggregate, Sum
 
 # Create your models here.
 
-
 class Author(models.Model):
     """
     Модель Author - объекты всех авторов, поля:

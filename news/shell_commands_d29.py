@@ -18,7 +18,7 @@ Category.objects.create(name_category='Искусство')
 
 # 4. Добавить 2 статьи и 1 новость.
 # 5. Присвоить им категории (как минимум в одной статье/новости должно быть не меньше 2 категорий).
-p1 = Post.objects.create(author_user=a1, post_type='AR', header_post="Заголовок первой статьи", text_post="Здесь какой то текст первой статьи")                                                                                                                                                                      ^
+p1 = Post.objects.create(author_user=a1, post_type="AR", header_post="Заголовок статьи которая первая", text_post="Обычно тут не было сложностей, но вот что то пошло не так")                                                                                                                                                                      ^
 p1.category.set([Category.objects.get(id=1)])
 p2 = Post.objects.create(author_user=a2, post_type='AR', header_post="Какой то заголовок второй статьи", text_post="Новый текст второй статьи")
 p2.category.set([Category.objects.get(id=2)])

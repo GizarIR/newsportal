@@ -2,7 +2,8 @@ from django.shortcuts import render
 
 # Create your views here.
 
-# Code for debug models.py add-news. It can be remove.
+# Code for debug models.py add-news. It can remove.
+
 # from news.models import *
 # from django.contrib.auth.models import User
 # from django.db.models import Aggregate, Sum
@@ -54,8 +55,4 @@ from django.shortcuts import render
 # c5.like()
 # c5.like()
 # c5.rating_comment
-
-Post.objects.filter(author_user=a1.id).aggregate(Sum('rating_post'))['rating_post__sum']
-Comment.objects.filter(author_user=admin.id).aggregate(Sum('rating_comment'))['rating_comment__sum']
-Comment.objects.filter(post__author_user=a1.id).aggregate(Sum('rating_comment'))['rating_comment__sum']
 
