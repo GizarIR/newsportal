@@ -26,7 +26,14 @@ class Author(models.Model):
         # commentRat = self.author_user.comment_set.aggregate(commentRating=sum('rating_comment'))
         # cRat = 0
         # cRat += commentRat.get('commentRating')
-        pass
+        post_rat = 0
+        com_aut_rat = 0
+        com_aut_art_rat = 0
+        post_rat = 3 * Post.objects.filter(author_user=self.id).aggregate(Sum('rating_post'))['rating_post__sum']
+        com_aut_rat = Comment.objects.filter(author_user=self.id).aggregate(Sum('rating_comment'))['rating_comment__sum']
+        com_aut_art_rat = Comment.objects.filter(post__author_user=self.id).aggregate(Sum('rating_comment'))['rating_comment__sum']
+        self.rating_author = post_rat + com_aut_rat + com_aut_art_rat
+        self.save()
 
 class Category(models.Model):
     """

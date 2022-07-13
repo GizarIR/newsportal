@@ -4,7 +4,9 @@ from django.shortcuts import render
 
 from news.models import *
 from django.contrib.auth.models import User
+from django.db.models import Aggregate, Sum
 
+admin = User.objects.get(id=1)
 u1 = User.objects.get(id=2)
 u2 = User.objects.get(id=3)
 a1 = Author.objects.get(id=1)
@@ -44,3 +46,14 @@ c4.dislike()
 c4.dislike()
 c4.dislike()
 c4.rating_comment
+c5.like()
+c5.like()
+c5.like()
+c5.like()
+c5.like()
+c5.rating_comment
+
+Post.objects.filter(author_user=a1.id).aggregate(Sum('rating_post'))['rating_post__sum']
+Comment.objects.filter(author_user=admin.id).aggregate(Sum('rating_comment'))['rating_comment__sum']
+Comment.objects.filter(post__author_user=a1.id).aggregate(Sum('rating_comment'))['rating_comment__sum']
+

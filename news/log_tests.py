@@ -2,7 +2,6 @@
 # >>> from news.models import *
 # >>> u1 = User.objects.create_user('user1')
 # >>> u2 = User.objects.create_user('user2')
-# >>> a1 = Author.objects.create(author_user=user1)
 # >>> a1 = Author.objects.create(author_user=u1)
 # >>> a2 = Author.objects.create(author_user=u2)
 # >>> Author.objects.all()
@@ -98,3 +97,9 @@
 # -2
 # >>> c4.dislike()
 # >>>
+# >>> c5=Comment.objects.create(post=p1, author_user=User.objects.get(id=1), text_comment="А вот и комментарий и не от автора")
+# >>> c5.like()
+# >>> c5.like()
+# >>> c5.like()
+# >>> c5.like()
+# >>> c5.like()
