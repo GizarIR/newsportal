@@ -18,6 +18,7 @@ c1 = Comment.objects.get(id=1)
 c2 = Comment.objects.get(id=2)
 c3 = Comment.objects.get(id=3)
 c4 = Comment.objects.get(id=4)
+c5 = Comment.objects.get(id=5)
 p1.like()
 p1.like()
 p1.rating_post

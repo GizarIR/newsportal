@@ -103,3 +103,29 @@
 # >>> c5.like()
 # >>> c5.like()
 # >>> c5.like()
+# >>> Author.objects.all().values()
+# <QuerySet [{'id': 1, 'author_user_id': 2, 'rating_author': 0}, {'id': 2, 'author_user_id': 3, 'rating_author': 0}]>
+# >>> a1.update_rating()
+# >>> a2.update_rating()
+# >>> Author.objects.all().values()
+# <QuerySet [{'id': 1, 'author_user_id': 2, 'rating_author': 135}, {'id': 2, 'author_user_id': 3, 'rating_author': -80}]>
+# >>> top_a = Author.objects.order_by('-rating_author')[:1]
+# >>> for i in top_a:
+# ...     i.rating_author
+# ...     i.author_user.username
+# ...
+# 135
+# 'Gizar'
+# f"""TOP author: {top_a[0].author_user.username} rating  {top_a[0].rating_author}"""
+#
+# tp = Post.objects.order_by('-rating_post')[:1]
+# >>> f"""{tp[0].create_date:%Y-%m-%d}, {Author.objects.get(id=tp[0].author_user.id).author_user.username}, {tp[0].rating_post}, {tp[0].header_post}, {tp[0].preview()}"""
+# '2022-07-12, Gizar, 20, Заголовок новости, Текст простой новости ...'
+
+#
+# >>> ctp = Comment.objects.filter(post=tp[0].id)
+# >>> for i in ctp:
+# ...     f"""{i.create_datetime}, {i.author_user}, {i.rating_comment}, {i.text_comment}"""
+# ...
+# '2022-07-12 14:37:08.092093+00:00, Ivan, 10, Автар жжет'
+# '2022-07-12 14:37:44.644517+00:00, Gizar, -15, Как же хорошо все выглядит, а на самом деле...'

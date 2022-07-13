@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Aggregate, Sum
 
 # Create your models here.
 
@@ -21,14 +22,10 @@ class Author(models.Model):
             - суммарный рейтинг всех комментариев автора;
             - суммарный рейтинг всех комментариев к статьям автора.
         """
-        # postRat = sum(map(int, list(Post.objects.filter(authorUser=self.id).values('rating'))))
-        # commentAuthorRat = sum(map(int, list(Comment.objects.filter(authorUser=self.id).values('rating'))))
-        # commentRat = self.author_user.comment_set.aggregate(commentRating=sum('rating_comment'))
-        # cRat = 0
-        # cRat += commentRat.get('commentRating')
         post_rat = 0
         com_aut_rat = 0
         com_aut_art_rat = 0
+
         post_rat = 3 * Post.objects.filter(author_user=self.id).aggregate(Sum('rating_post'))['rating_post__sum']
         com_aut_rat = Comment.objects.filter(author_user=self.id).aggregate(Sum('rating_comment'))['rating_comment__sum']
         com_aut_art_rat = Comment.objects.filter(post__author_user=self.id).aggregate(Sum('rating_comment'))['rating_comment__sum']
