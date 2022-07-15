@@ -38,6 +38,9 @@ class Category(models.Model):
     """
     name_category = models.CharField(max_length=64, unique=True)
 
+    def __str__(self):
+        return f"{self.name_category.title()}"
+
 
 class Post(models.Model):
     """
@@ -78,6 +81,8 @@ class Post(models.Model):
     def preview(self):
         return f'{self.text_post[0:123]} ...'
 
+    def __str__(self):
+        return f"{self.create_date:%Y-%m-%d %H:%M} --- {self.header_post}"
 
 class PostCategory(models.Model):
     """

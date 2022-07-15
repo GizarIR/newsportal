@@ -1,4 +1,4 @@
-
+# Can be delete
 # >>> from news.models import *
 # >>> u1 = User.objects.create_user('user1')
 # >>> u2 = User.objects.create_user('user2')
