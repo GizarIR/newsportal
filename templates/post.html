@@ -3,11 +3,12 @@
 
 <!-- Название у нас будет Posts -->
 {% block title %}
-Posts
+Post
 {% endblock title %}
 
 <!-- В контенте на странице мы выводим все статьи и новости -->
 {% block content %}
-<h1>Все новости и статьи:</h1>
-{{ posts }}
+<h1>Публикация:</h1>
+<h3>{{ post }}...</h3>
+{{ post.text_post }}
 {% endblock content %}
