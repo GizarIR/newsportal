@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView
 
 # Create your views here.
 from .models import Post
+from pprint import pprint
 
 
 class PostsList(ListView):
@@ -16,6 +17,11 @@ class PostsList(ListView):
     # Это имя списка, в котором будут лежать все объекты.
     # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
     context_object_name = 'posts'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # pprint(context)
+        return context
 
 class PostDetail(DetailView):
     # Модель всё та же, но мы хотим получать информацию по отдельной статье
