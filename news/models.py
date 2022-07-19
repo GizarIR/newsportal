@@ -82,7 +82,9 @@ class Post(models.Model):
         return f'{self.text_post[0:123]} ...'
 
     def __str__(self):
-        return f"{self.create_date:%Y-%m-%d %H:%M} --- {self.header_post}"
+        # return f"{self.create_date:%Y-%m-%d %H:%M} --- {self.header_post}"
+        return f"{self.header_post}"
+
 
 class PostCategory(models.Model):
     """

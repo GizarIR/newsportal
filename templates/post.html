@@ -1,14 +1,24 @@
 <!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
 
-<!-- Название у нас будет Posts -->
+<!-- Название у нас будет Post -->
 {% block title %}
-Post
+Публикация
 {% endblock title %}
 
-<!-- В контенте на странице мы выводим все статьи и новости -->
+<!-- В контенте на странице мы выводим статью -->
 {% block content %}
-<h1>Публикация:</h1>
-<h3>{{ post }}...</h3>
-{{ post.text_post }}
+
+{% if post.post_type == 'NW' %}
+    <p><h5 align="left">Новость: "{{ post.header_post }}"</h5></p>
+{% else %}
+   <p><h5 align="left">Статья: "{{ post.header_post }}"</h5></p>
+{% endif %}
+
+<table border="2"  cellpadding="20" frame="hsides">
+    <caption>{{ post.create_date|date:'d.M.Y' }} </caption>
+    <tr>
+        <td align="left">{{ post.text_post }}</td>
+    </tr>
+</table>
 {% endblock content %}

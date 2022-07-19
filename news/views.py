@@ -18,8 +18,10 @@ class PostsList(ListView):
     # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
     context_object_name = 'posts'
 
+    # переопределим на всякий случай чтобы не забыть что есть такая возможность вытаскивать в шаблон доп инфу
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # context['bg_color_mode'] = 3
         # pprint(context)
         return context
 
