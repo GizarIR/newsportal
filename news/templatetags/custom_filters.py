@@ -10,7 +10,7 @@ register = template.Library()
 
 @register.filter()
 def censor(value):
-    censor_list = ['редиска', 'гад', 'дурак']
+    censor_list = ['редиска', 'гад', 'дурак', 'урод']
     if not isinstance(value, str):
         raise TypeError("Цензурирование осуществляется только для объекта типа Str")
     else:
