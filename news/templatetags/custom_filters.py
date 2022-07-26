@@ -18,7 +18,9 @@ def censor(value):
         for i in range(len(list_)):
             if list_[i].strip(string.punctuation).lower() in censor_list:
                 if len(list_[i].strip(string.punctuation)) != len(list_[i]):
-                    list_[i] = f"{list_[i][0]}{(len(list_[i])-2) * '*'}{list_[i][-1]}"
+                    for j in range(1, len(list_[i])):
+                        if list_[i][j] not in string.punctuation:
+                            list_[i] = f"{list_[i][:j]}*{list_[i][j+1:]}"
                 else:
                     list_[i] = f"{list_[i][0]}{(len(list_[i]) - 1) * '*'}"
         return f'{" ".join(list_)}'
