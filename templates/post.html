@@ -1,6 +1,10 @@
 <!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
 
+<!-- подгрузим собственные фильтры из файла custom_filters.py-->
+
+{% load custom_filters %}
+
 <!-- Название у нас будет Post -->
 {% block title %}
 Публикация
@@ -10,15 +14,21 @@
 {% block content %}
 
 {% if post.post_type == 'NW' %}
-    <p><h5 align="left">Новость: "{{ post.header_post }}"</h5></p>
+    <p><h5 align="left">Новость: "{{ post.header_post|censor }}"</h5></p>
 {% else %}
-   <p><h5 align="left">Статья: "{{ post.header_post }}"</h5></p>
+    <p><h5 align="left">Статья: "{{ post.header_post|censor }}"</h5></p>
+    <p align="left"> Категории:
+        {% for cat in post.category.all %}
+            {{ cat }}
+        {% endfor %}
+    </p>
+
 {% endif %}
 
 <table border="2"  cellpadding="20" frame="hsides">
     <caption>{{ post.create_date|date:'d.M.Y' }} </caption>
     <tr>
-        <td align="left">{{ post.text_post }}</td>
+        <td align="left">{{ post.text_post|censor }}</td>
     </tr>
 </table>
 {% endblock content %}

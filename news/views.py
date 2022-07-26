@@ -8,6 +8,7 @@ from pprint import pprint
 
 class PostsList(ListView):
     # Указываем модель, объекты которой мы будем выводить
+    # строчка ниже эквивалент queryset = Post.objects.all(), те если нужно можно использовать фильтры
     model = Post
     # Поле, которое будет использоваться для сортировки объектов
     ordering = '-create_date'

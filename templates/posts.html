@@ -14,14 +14,20 @@ Posts
         <caption align="top"> <h4>Всего публикаций: {{ posts|length }}</h4></caption>
         <tr>
             <th>Заголовок</th>
-            <th>Дата публикации</th>
-            <th>Текст статьи (коротко)</th>
+            <th>Дата</th>
+            <th>Категория</th>
+            <th>Описание</th>
         </tr>
         {% for post in posts %}
         <tr>
             <td align="left">{{ post.header_post }}</td>
             <td>{{ post.create_date|date:'d.M.Y' }}</td>
-            <td align="left">{{ post.text_post|truncatewords:20 }}</td>
+            <td align="left">
+                {% for cat in post.category.all %}
+                {{ cat }}
+                {% endfor %}
+            </td>
+            <td align="left">{{ post.text_post|truncatewords:10 }}</td>
         </tr>
         {% endfor %}
     </table>

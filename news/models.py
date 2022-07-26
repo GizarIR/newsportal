@@ -10,7 +10,7 @@ class Author(models.Model):
         - cвязь «один к одному», с встроенной моделью пользователей User;
         - рейтинг пользователя.
     """
-    author_user = models.OneToOneField(User, on_delete=models.CASCADE)
+    author_user = models.OneToOneField(User, on_delete=models.CASCADE) #параметр on_delete м.б. SET_NULL
     rating_author = models.SmallIntegerField(default=0)
 
     def update_rating(self):
@@ -36,10 +36,16 @@ class Category(models.Model):
     Модель Category - nемы, которые они отражают (спорт, политика, образование и т. д.), поля:
         - название категории, поле уникально
     """
-    name_category = models.CharField(max_length=64, unique=True)
+    name_category = models.CharField(max_length=64, unique=True, verbose_name='Название', help_text='Название категории - 64 символа')
 
+    # переопределяя этот метод мы получаем красивое название объекта  в админ панели
     def __str__(self):
         return f"{self.name_category.title()}"
+
+    # переопределяя этот класс мы получаем красивые названия классов в админ панели
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
 
 class Post(models.Model):
@@ -85,6 +91,11 @@ class Post(models.Model):
         # return f"{self.create_date:%Y-%m-%d %H:%M} --- {self.header_post}"
         return f"{self.header_post}"
 
+    # переопределяя этот класс мы получаем красивые названия классов в админ панели
+    class Meta:
+        verbose_name = 'Публикация'
+        verbose_name_plural = 'Публикации'
+        # ordering = '-create_date'
 
 class PostCategory(models.Model):
     """
@@ -95,6 +106,13 @@ class PostCategory(models.Model):
     throughPost = models.ForeignKey('Post', on_delete=models.CASCADE)
     throughCategory = models.ForeignKey('Category', on_delete=models.CASCADE)
 
+    # def __str__(self):
+    #     return f"{Category.objects.get(pk=self.throughCategory).values('name_category')}"
+
+    # переопределяя этот класс мы получаем красивые названия классов в админ панели
+    class Meta:
+        verbose_name = 'Связь Публикация-Категория'
+        verbose_name_plural = 'Связи Публикации-Категории'
 
 class Comment(models.Model):
     """
