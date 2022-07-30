@@ -2,7 +2,7 @@ from django import template
 import string
 
 
-CENSOR_LIST = ['редиска', 'гад', 'дурак', 'урод']
+CENSOR_LIST = ['редиска', 'гад', 'дурак', 'урод', 'пиzдит']
 
 register = template.Library()
 
