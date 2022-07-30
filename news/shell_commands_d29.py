@@ -150,3 +150,17 @@ print('tasks completed')
 # c5.like()
 # c5.like()
 # c5.rating_comment
+
+# #Генерация данных в БД
+# from random import randrange
+#
+# commands_lines = ''
+# for i in range(1, 100):
+#     str_p = f"p{i} = Post.objects.create(author_user=a{randrange(1, 3)}, post_type=\'AR\', header_post=\'Заголовок публикации {i}\', text_post=\'Текст статьи {i} для проверки пагинации\')\n"
+#     str_c = f'p{i}.category.set([Category.objects.get(id={randrange(1, 5)})])\n'
+#     # print(str_p)
+#     # print(str_c)
+#     commands_lines += str_p
+#     commands_lines += str_c
+#
+# print(commands_lines)
