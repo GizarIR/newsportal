@@ -14,6 +14,6 @@ urlpatterns = [
     # pk — это первичный ключ товара, который будет выводиться у нас в шаблон, наименование pk можно переопределить
     # через параметр pk_url_kwarg из родительского класса в файле views.py
     # int — указывает на то, что принимаются только целочисленные значения
-    path('<int:pk>', PostDetail.as_view()),
-    path('search/', PostsListSearch.as_view()),
+    path('<int:pk>', PostDetail.as_view(), name='post_detail'),
+    path('search/', PostsListSearch.as_view(), name='posts_list_search'),
 ]
