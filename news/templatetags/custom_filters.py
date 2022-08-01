@@ -21,3 +21,10 @@ def censor(value):
                     if list_[i][j] not in string.punctuation:
                         list_[i] = f"{list_[i][:j]}*{list_[i][j+1:]}"
         return f'{" ".join(list_)}'
+
+@register.simple_tag(takes_context=True)
+def url_replace(context, **kwargs):
+    d = context['request'].GET.copy()
+    for k, v in kwargs.items():
+        d[k] = v
+    return d.urlencode()

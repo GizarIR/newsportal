@@ -1,6 +1,6 @@
 from django.urls import path
 # Импортируем созданное нами представление
-from .views import PostsList, PostDetail
+from .views import PostsList, PostDetail, PostsListSearch
 
 
 urlpatterns = [
@@ -15,4 +15,5 @@ urlpatterns = [
     # через параметр pk_url_kwarg из родительского класса в файле views.py
     # int — указывает на то, что принимаются только целочисленные значения
     path('<int:pk>', PostDetail.as_view()),
+    path('search/', PostsListSearch.as_view()),
 ]

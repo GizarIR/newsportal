@@ -3,7 +3,8 @@ from django.views.generic import ListView, DetailView
 
 # Create your views here.
 from .models import Post
-from pprint import pprint
+from .filters import PostFilter
+# from pprint import pprint
 
 
 class PostsList(ListView):
@@ -34,3 +35,24 @@ class PostDetail(DetailView):
     template_name = 'post.html'
     # Используем другое название объекта, в котором будет выбранный пользователем продукт
     context_object_name = 'post'
+
+
+class PostsListSearch(ListView):
+    model = Post
+    ordering = 'create_date'
+    template_name = 'posts_search.html'
+    context_object_name = 'finded_posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET, queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['filterset'] = self.filterset
+        return context
+
+
+

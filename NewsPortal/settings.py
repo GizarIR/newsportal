@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'fpages',
     'news',
+    'django_filters',
 ]
 
 #добавляем константу
@@ -66,8 +67,8 @@ ROOT_URLCONF = 'NewsPortal.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # добавим путь при до шаблонов - делаем это при настройке flatpages
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        # добавим путь при до шаблонов - делаем это при настройке flatpages и др. приложений
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'news/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
