@@ -14,13 +14,15 @@
     <input type="submit" name="Найти" />
 </form>
 
-{% if finded_posts %}
+<a href="http://127.0.0.1:8000/posts/search/?">Сбросить</a>
 
-    <table border="3" cellspacing="10" cellpadding="5" frame="hsides">
+{% if finded_posts %}
+    <table cellpadding="5" frame="hsides">
         <caption align="top"> <h4>Всего публикаций на странице: {{ finded_posts|length }}</h4></caption>
         <tr>
             <th>Заголовок</th>
             <th>Дата</th>
+            <th>Автор</th>
             <th>Категория</th>
             <th>Описание</th>
         </tr>
@@ -28,6 +30,7 @@
         <tr>
             <td align="left">{{ post.header_post|censor }}</td>
             <td>{{ post.create_date|date:'d.M.Y' }}</td>
+            <td align="left">{{ post.author_user }}</td>
             <td align="left">
                 {% for cat in post.category.all %}
                 {{ cat }}

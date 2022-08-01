@@ -31,6 +31,9 @@ class Author(models.Model):
         self.rating_author = post_rat + com_aut_rat + com_aut_art_rat
         self.save()
 
+    def __str__(self):
+        return f'{self.author_user.username}'
+
 class Category(models.Model):
     """
     Модель Category - nемы, которые они отражают (спорт, политика, образование и т. д.), поля:
