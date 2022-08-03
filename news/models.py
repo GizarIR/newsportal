@@ -66,6 +66,7 @@ class Post(models.Model):
     """
     news = 'NW'
     article = 'AR'
+
     POST_TYPES =[
         (news, 'Новость'),
         (article, 'Статья'),

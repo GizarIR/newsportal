@@ -18,16 +18,19 @@
 
 {% if finded_posts %}
     <table cellpadding="2" frame="hsides">
-        <caption align="top"> <h4>Всего публикаций на странице: {{ finded_posts|length }}</h4></caption>
+        <caption align="top"> <h4>Публикаций на странице: {{ finded_posts|length }}</h4></caption>
         <tr>
+            <th>Номер</th>
             <th>Заголовок</th>
             <th>Дата</th>
             <th>Автор</th>
             <th>Категория</th>
+            <th>Тип</th>
             <th>Описание</th>
         </tr>
         {% for post in finded_posts %}
         <tr>
+            <td align="left">{{ post.pk }}</td>
             <td align="left">{{ post.header_post|censor }}</td>
             <td>{{ post.create_date|date:'d.M.Y' }}</td>
             <td align="left">{{ post.author_user }}</td>
@@ -35,6 +38,13 @@
                 {% for cat in post.category.all %}
                 {{ cat }}
                 {% endfor %}
+            </td>
+            <td>
+                {% if post.post_type == 'AR' %}
+                    Статья
+                {% else %}
+                    Новость
+                {% endif %}
             </td>
             <td align="left">{{ post.text_post|truncatewords:10|censor }}</td>
         </tr>
