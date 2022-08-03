@@ -163,4 +163,4 @@
 #     commands_lines += str_p
 #     commands_lines += str_c
 #
-# print(commands_lines)
+# print(commands_lines) # потом весь вывод простым копирование отправляем в терминал
