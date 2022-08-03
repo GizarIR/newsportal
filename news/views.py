@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 
 # Create your views here.
 from .models import Post
 from .filters import PostFilter
+from .forms import PostForm
 # from pprint import pprint
 
 
@@ -54,5 +55,9 @@ class PostsListSearch(ListView):
         context['filterset'] = self.filterset
         return context
 
+class PostCreate(CreateView):
+    form_class = PostForm
+    model = Post
+    template_name = 'post_edit.html'
 
 

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Aggregate, Sum
+from django.urls import reverse
+
 
 # Create your models here.
 
@@ -94,6 +96,11 @@ class Post(models.Model):
         # return f"{self.create_date:%Y-%m-%d %H:%M} --- {self.header_post}"
         return f"{self.header_post}"
 
+    # Функция нужна для корректной работы формы создания публикации view PostCreate и форма PostForm, она возвращает
+    # на страницу детализации после нажатия кнопки Сохранить
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.pk)])
+
     # переопределяя этот класс мы получаем красивые названия классов в админ панели
     class Meta:
         verbose_name = 'Публикация'
@@ -110,7 +117,7 @@ class PostCategory(models.Model):
     throughCategory = models.ForeignKey('Category', on_delete=models.CASCADE)
 
     # def __str__(self):
-    #     return f"{Category.objects.get(pk=self.throughCategory).values('name_category')}"
+    #     return f"{Category.objects.get(postcategory__throughCategory=self.throughCategory).values('name_category')}"
 
     # переопределяя этот класс мы получаем красивые названия классов в админ панели
     class Meta:

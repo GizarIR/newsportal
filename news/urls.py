@@ -1,6 +1,6 @@
 from django.urls import path
 # Импортируем созданное нами представление
-from .views import PostsList, PostDetail, PostsListSearch
+from .views import PostsList, PostDetail, PostsListSearch, PostCreate
 
 
 urlpatterns = [
@@ -16,4 +16,5 @@ urlpatterns = [
     # int — указывает на то, что принимаются только целочисленные значения
     path('<int:pk>', PostDetail.as_view(), name='post_detail'),
     path('search/', PostsListSearch.as_view(), name='posts_list_search'),
+    path('create/', PostCreate.as_view(), name='post_create'),
 ]

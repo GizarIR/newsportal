@@ -11,10 +11,10 @@
 
 <form action="" method="get">
     {{ filterset.form.as_p }}
-    <input type="submit" name="Найти" />
+    <input type="submit" value="Найти" />
 </form>
 
-<a href="http://127.0.0.1:8000/posts/search/?">Сбросить</a>
+<a href="? {% url 'posts_list_search' %}">Сбросить</a>
 
 {% if finded_posts %}
     <table cellpadding="2" frame="hsides">
