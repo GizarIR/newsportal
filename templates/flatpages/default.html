@@ -8,6 +8,7 @@
         <title>NewsPortal</title>
 
         {% load static %}
+        {% load custom_filters %}
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     </head>
@@ -35,6 +36,13 @@
                        <li class="nav-item">
                            <a class="nav-link" href="/contacts/">Контакты</a>
                        </li>
+                       <li class="nav-item">
+                           <a class="nav-link" href="{% url 'posts_list_search' %}">Поиск</a>
+                       </li>
+                       <li class="nav-item">
+                           <a class="nav-link" href="{% url 'profile_user_update' user.pk %}">Профиль</a>
+                       </li>
+
                    </ul>
                </div>
            </div>

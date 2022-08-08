@@ -1,7 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
+from django.contrib.auth.models import User
 from .models import Post
+
 
 class PostFormArticle(forms.ModelForm):
     header_post = forms.CharField(min_length=20)
@@ -65,3 +67,19 @@ class PostFormNew(forms.ModelForm):
             )
 
         return cleaned_data
+
+
+class ProfileUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        # fields = '__all__'
+        fields = [
+            'first_name',
+            'last_name',
+            'email',
+            'username',
+            # 'password',
+
+        ]
+
+

@@ -31,7 +31,7 @@
         {% for post in finded_posts %}
         <tr>
             <td align="left">{{ post.pk }}</td>
-            <td align="left">{{ post.header_post|censor }}</td>
+            <td align="left"><a href="{{ post.get_absolute_url  }}"> {{ post.header_post|censor }} </a></td>
             <td>{{ post.create_date|date:'d.M.Y' }}</td>
             <td align="left">{{ post.author_user }}</td>
             <td align="left">

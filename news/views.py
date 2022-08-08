@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 from .models import Post
 from .filters import PostFilter
-from .forms import PostFormArticle, PostFormNew
+from .forms import PostFormArticle, PostFormNew, ProfileUserForm
 # from pprint import pprint
 
 
@@ -124,3 +126,9 @@ class PostDelete(DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('posts_list_search')
+
+class ProfileUserUpdate(LoginRequiredMixin, UpdateView):
+    form_class = ProfileUserForm
+    model = User
+    template_name = 'profile_edit.html'
+    success_url = reverse_lazy('home')
