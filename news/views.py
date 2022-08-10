@@ -14,7 +14,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 # импорты проекта
-from .models import Post
+from .models import Post, Author
 from .filters import PostFilter
 from .forms import PostFormArticle, PostFormNew
 # Отключено поскольку регистрацию и аутентификацию по заданию необходимо реализовать через библиотеку allauth
@@ -168,7 +168,12 @@ def upgrade_me(request):
         и залогинился, может быть включен в группу authors. Данная функция нужна для использования ее в urls.py"""
     user = request.user
     author_group = Group.objects.get(name='authors')
+
     if not request.user.groups.filter(name='authors').exists():
+        # добавим в модель allauth
         author_group.user_set.add(user)
+        # добавим также автора в нашу таблицу
+        Author.objects.create(author_user=user)
+
     return redirect('home_news')
 
