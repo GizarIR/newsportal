@@ -1,6 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
+from allauth.account.forms import SignupForm
+from django.contrib.auth.models import Group
+
 from django.contrib.auth.models import User
 from .models import Post
 
@@ -79,6 +82,18 @@ class ProfileUserForm(forms.ModelForm):
             'email',
             'username',
             # 'password',
+            'groups',
 
         ]
+
+
+class CommonSignupForm(SignupForm):
+    """Функция добавлена при настройке allauth, необходима для реализации механизма:
+    при сохраниении зарегистрированного пользователя его автоматически определяют в группу common.
+    Данная группа была создана в админке"""
+    def save(self, request):
+        user = super(CommonSignupForm, self).save(request)
+        common_group=Group.objects.get(name='common')
+        common_group.user_set.add(user)
+        return user
 

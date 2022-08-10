@@ -172,3 +172,6 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+# Строчка добавлена для того чтобы allauth библиотека знала что необходимо использовать видоизмененную
+# форму регистрации пользователя SignupForm
+ACCOUNT_FORMS = {'signup': 'news.forms.CommonSignupForm'}

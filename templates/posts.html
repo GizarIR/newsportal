@@ -11,6 +11,13 @@ Posts
 <!-- В контенте на странице мы выводим все статьи и новости -->
 {% block content %}
 <h1>Публикации портала:</h1>
+
+<p>
+{% if is_not_author %}
+   <button><a href="{% url 'profile_user_upgrade' %}"> Стать автором </a></button>
+{% endif %}
+</p>
+
 {% if posts %}
     <table border="3" cellspacing="10" cellpadding="5" frame="hsides">
         <caption align="top"> <h4>Всего публикаций на странице: {{ posts|length }}</h4></caption>

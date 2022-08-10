@@ -1,10 +1,18 @@
+# импорты django
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-# Create your views here.
+# группа импорта для реализации механизма добавления в группу пользователя через реадктирование профиля на портале
+# с использованием библиотеки allauth
+from django.shortcuts import redirect
+from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required
+
+
+# импорты проекта
 from .models import Post
 from .filters import PostFilter
 from .forms import PostFormArticle, PostFormNew
@@ -28,9 +36,13 @@ class PostsList(ListView):
     context_object_name = 'posts'
     paginate_by = 10
 
-    # переопределим на всякий случай чтобы не забыть что есть такая возможность вытаскивать в шаблон доп инфу
+    # В шаблон передаем дополнительную информацию о том является ли пользователем участником группы author
     def get_context_data(self, **kwargs):
+        """Данная функция добавлена при настройке allauth. Нужна для реализации механизма:
+        пользователь который прошел регистрацию и залогинился, может быть включен
+        в группу authors. Далее можно использовать данную переменную в любом шаблоне, например, posts.html """
         context = super().get_context_data(**kwargs)
+        context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
         # context['bg_color_mode'] = 3
         # pprint(context)
         return context
@@ -136,3 +148,22 @@ class ProfileUserUpdate(LoginRequiredMixin, UpdateView):
     template_name = 'profile_edit.html'
     context_object_name = 'profile'
     success_url = reverse_lazy('home_news')
+
+    # def get_context_data(self, **kwargs):
+    #     """Данная функция добавлена при настройке allauth. Нужна для реализации механизма:
+    #     пользователь который прошел регистрацию и залогинился, может быть включен
+    #     в группу authors. Далее можно использовать данную переменную в любом шаблоне, например, редактирование профиля """
+    #     context = super().get_context_data()
+    #     context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
+    #     return context
+
+@login_required
+def upgrade_me(request):
+    """ Фукнкция добавлена при настройке allauth. Нужна для реализации механизма: пользователь который прошел регистрацию
+        и залогинился, может быть включен в группу authors. Данная функция нужна для использования ее в urls.py"""
+    user = request.user
+    author_group = Group.objects.get(name='authors')
+    if not request.user.groups.filter(name='authors').exists():
+        author_group.user_set.add(user)
+    return redirect('home_news')
+

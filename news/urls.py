@@ -2,7 +2,7 @@ from django.urls import path
 # Импортируем созданное нами представление
 from .views import (
     PostsList, PostDetail, PostsListSearch, PostCreateArticle, PostCreateNew, PostUpdateNew, PostUpdateArticle,
-    PostDelete
+    PostDelete, upgrade_me
 )
 
 # Отключено поскольку регистрацию и аутентификацию по заданию необходимо реализовать через библиотеку allauth
@@ -22,5 +22,6 @@ urlpatterns = [
     path('article/<int:pk>/edit/', PostUpdateArticle.as_view(), name='post_update_article'),
     path('article/<int:pk>/delete/', PostDelete.as_view(), name='post_delete_article'),
     # Редактирование профиля создал до реализации регистрацию и аутентификацию по заданию необходимо реализовать через библиотеку allauth
-    path('profile/<int:pk>/update/', ProfileUserUpdate.as_view(), name='profile_user_update')
+    path('profile/<int:pk>/update/', ProfileUserUpdate.as_view(), name='profile_user_update'),
+    path('upgrade/', upgrade_me, name='profile_user_upgrade')
 ]
