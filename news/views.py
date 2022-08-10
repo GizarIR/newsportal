@@ -156,14 +156,6 @@ class ProfileUserUpdate(LoginRequiredMixin, UpdateView):
     context_object_name = 'profile'
     success_url = reverse_lazy('home_news')
 
-    # def get_context_data(self, **kwargs):
-    #     """Данная функция добавлена при настройке allauth. Нужна для реализации механизма:
-    #     пользователь который прошел регистрацию и залогинился, может быть включен
-    #     в группу authors. Далее можно использовать данную переменную в любом шаблоне, например, редактирование профиля """
-    #     context = super().get_context_data()
-    #     context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
-    #     return context
-
 @login_required
 def upgrade_me(request):
     """ Фукнкция добавлена при настройке allauth. Нужна для реализации механизма: пользователь который прошел регистрацию
