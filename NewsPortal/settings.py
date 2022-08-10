@@ -24,6 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-gk4-vyka9h-yqh(5w7@r!=u_uuc%-n5_+cae4!!c5=3=pe9w1p'
 
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -45,10 +47,14 @@ INSTALLED_APPS = [
     'fpages',
     'news',
     'django_filters',
+    # добавим приложения для рагистрации и аторизации
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # ... include the providers you want to enable for work allauth library:
+    'allauth.socialaccount.providers.google',
 ]
 
-#добавляем константу
-SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,9 +82,18 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # для работы allauth
+                'django.template.context_processors.request',
             ],
         },
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 WSGI_APPLICATION = 'NewsPortal.wsgi.application'
@@ -140,4 +155,20 @@ STATICFILES_DIRS = [
     BASE_DIR/"static"
 ]
 
-LOGIN_REDIRECT_URL = 'home'
+# далее идут новые константы
+
+
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = 'home_news'
+LOGOUT_REDIRECT_URL  = 'home_news'
+
+#добавляем константу
+SITE_ID = 1
+
+# Настройка аутентификации при помощи библиотеки allauth
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'

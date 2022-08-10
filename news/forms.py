@@ -68,7 +68,7 @@ class PostFormNew(forms.ModelForm):
 
         return cleaned_data
 
-
+# Отключено поскольку регистрацию и аутентификацию по заданию необходимо реализовать через библиотеку allauth
 class ProfileUserForm(forms.ModelForm):
     class Meta:
         model = User

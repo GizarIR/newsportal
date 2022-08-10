@@ -7,8 +7,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 from .models import Post
 from .filters import PostFilter
-from .forms import PostFormArticle, PostFormNew, ProfileUserForm
-# from pprint import pprint
+from .forms import PostFormArticle, PostFormNew
+# Отключено поскольку регистрацию и аутентификацию по заданию необходимо реализовать через библиотеку allauth
+from .forms import ProfileUserForm
+
 
 
 class PostsList(ListView):
@@ -43,7 +45,7 @@ class PostDetail(DetailView):
     context_object_name = 'post'
 
 
-class PostsListSearch(ListView):
+class PostsListSearch(LoginRequiredMixin, ListView):
     """Представление возвращает форму поиска со списком публикаций - результатом поиска"""
     model = Post
     ordering = '-create_date'
@@ -62,7 +64,7 @@ class PostsListSearch(ListView):
         return context
 
 
-class PostCreateNew(CreateView):
+class PostCreateNew(LoginRequiredMixin, CreateView):
     """Представление возвращает форму создания новой новости"""
     form_class = PostFormNew
     model = Post
@@ -74,7 +76,7 @@ class PostCreateNew(CreateView):
         return super().form_valid(form)
 
 
-class PostCreateArticle(CreateView):
+class PostCreateArticle(LoginRequiredMixin, CreateView):
     """Представление возвращает форму создания новой статьи"""
     form_class = PostFormArticle
     model = Post
@@ -85,7 +87,7 @@ class PostCreateArticle(CreateView):
         post.post_type ='AR'
         return super().form_valid(form)
 
-class PostUpdateNew(UpdateView):
+class PostUpdateNew(LoginRequiredMixin, UpdateView):
     """Представление возвращает форму редактирования новости"""
     form_class = PostFormNew
     model = Post
@@ -97,7 +99,7 @@ class PostUpdateNew(UpdateView):
         return super().form_valid(form)
 
 
-class PostUpdateArticle(UpdateView):
+class PostUpdateArticle(LoginRequiredMixin, UpdateView):
     """Представление возвращает форму редактирования статьи"""
     form_class = PostFormArticle
     model = Post
@@ -121,15 +123,16 @@ class PostUpdateArticle(UpdateView):
 
 # удаление в задании можно сделать одним представлением, но с разной маршрутизацией, так на мой взгляд меньше кода
 # и логичнее
-class PostDelete(DeleteView):
+class PostDelete(LoginRequiredMixin, DeleteView):
     """Представление возвращает форму удаления публикации"""
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('posts_list_search')
 
+# Отключено поскольку регистрацию и аутентификацию по заданию необходимо реализовать через библиотеку allauth
 class ProfileUserUpdate(LoginRequiredMixin, UpdateView):
     form_class = ProfileUserForm
     model = User
     template_name = 'profile_edit.html'
     context_object_name = 'profile'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('home_news')
