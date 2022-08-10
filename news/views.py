@@ -87,6 +87,8 @@ class PostCreateNew(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.post_type ='NW'
+        # если нужно чтобы автор был тот пользователь который залогинился тогда строчку ниже раскомменируем
+        post.author_user = Author.objects.get(author_user=self.request.user)
         return super().form_valid(form)
 
 

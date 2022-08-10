@@ -42,7 +42,7 @@ class PostFormNew(forms.ModelForm):
     class Meta:
         model = Post
         fields = [
-            'author_user',
+            # 'author_user',
             # 'post_type',
             # 'create_date',
             'category',
