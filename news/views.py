@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 # импорты проекта
@@ -76,8 +77,9 @@ class PostsListSearch(LoginRequiredMixin, ListView):
         return context
 
 
-class PostCreateNew(LoginRequiredMixin, CreateView):
+class PostCreateNew(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """Представление возвращает форму создания новой новости"""
+    permission_required = ('news.add_post')
     form_class = PostFormNew
     model = Post
     template_name = 'post_edit_new.html'
@@ -88,8 +90,9 @@ class PostCreateNew(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class PostCreateArticle(LoginRequiredMixin, CreateView):
+class PostCreateArticle(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """Представление возвращает форму создания новой статьи"""
+    permission_required = ('news.add_post')
     form_class = PostFormArticle
     model = Post
     template_name = 'post_edit_article.html'
@@ -99,8 +102,9 @@ class PostCreateArticle(LoginRequiredMixin, CreateView):
         post.post_type ='AR'
         return super().form_valid(form)
 
-class PostUpdateNew(LoginRequiredMixin, UpdateView):
+class PostUpdateNew(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """Представление возвращает форму редактирования новости"""
+    permission_required = ('news.change_post')
     form_class = PostFormNew
     model = Post
     template_name = 'post_edit_new.html'
@@ -111,8 +115,9 @@ class PostUpdateNew(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class PostUpdateArticle(LoginRequiredMixin, UpdateView):
+class PostUpdateArticle(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """Представление возвращает форму редактирования статьи"""
+    permission_required = ('news.change_post')
     form_class = PostFormArticle
     model = Post
     template_name = 'post_edit_article.html'
