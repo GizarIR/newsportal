@@ -131,4 +131,5 @@ class ProfileUserUpdate(LoginRequiredMixin, UpdateView):
     form_class = ProfileUserForm
     model = User
     template_name = 'profile_edit.html'
+    context_object_name = 'profile'
     success_url = reverse_lazy('home')

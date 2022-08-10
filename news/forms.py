@@ -82,4 +82,3 @@ class ProfileUserForm(forms.ModelForm):
 
         ]
 
-

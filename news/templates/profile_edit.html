@@ -3,9 +3,16 @@
 {% block content %}
 <h1>Редактирование профиля</h1>
 <hr>
+
+{% if request.user.id != profile.id %}
+    <h3 style="color: red">У Вас нет прав доступа к данной информации</h3>
+{% elif request.user.id == profile.id %}
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Сохранить" />
 </form>
+{% endif %}
+
+
 {% endblock content %}
