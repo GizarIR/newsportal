@@ -178,8 +178,6 @@ SITE_ID = 1
 # Настройка аутентификации при помощи библиотеки allauth
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_AUTHENTIFICATION_METHOD = 'email'
-
 
 # ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
