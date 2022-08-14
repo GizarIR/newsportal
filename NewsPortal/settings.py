@@ -190,6 +190,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 # форму регистрации пользователя SignupForm
 ACCOUNT_FORMS = {'signup': 'news.forms.CommonSignupForm'}
 
+
 # настройки почты
 EMAIL_HOST = 'smtp.mail.ru'  # адрес сервера Яндекс-почты для всех один и тот же
 EMAIL_PORT = 465  # порт smtp сервера тоже одинаковый
