@@ -13,6 +13,14 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os.path
 from pathlib import Path
 
+# Безопасное хранение паролей
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+PASSWORD_EMAIL = os.environ.get("PASSWORD_EMAIL")
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -155,23 +163,40 @@ STATICFILES_DIRS = [
     BASE_DIR/"static"
 ]
 
-# далее идут новые константы
 
-
+# далее идут  переменные добавленные в ходе разработки приложения
 
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = 'home_news'
 LOGOUT_REDIRECT_URL  = 'home_news'
 
+DEFAULT_FROM_EMAIL = 'gizarir@mail.ru'  # здесь указываем уже свою ПОЛНУЮ почту, с которой будут отправляться письма
+
 #добавляем константу
 SITE_ID = 1
 
 # Настройка аутентификации при помощи библиотеки allauth
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_AUTHENTIFICATION_METHOD = 'email'
+
+
+# ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+# ACCOUNT_EMAIL_VERIFICATION = 'none' - первоначальное значение до настройки почтовых уведомлений
 # Строчка добавлена для того чтобы allauth библиотека знала что необходимо использовать видоизмененную
 # форму регистрации пользователя SignupForm
 ACCOUNT_FORMS = {'signup': 'news.forms.CommonSignupForm'}
+
+# настройки почты
+EMAIL_HOST = 'smtp.mail.ru'  # адрес сервера Яндекс-почты для всех один и тот же
+EMAIL_PORT = 465  # порт smtp сервера тоже одинаковый
+# ниже ваше имя пользователя, например, если ваша почта user@yandex.ru, то сюда надо писать user, иными словами,
+# это всё то что идёт до собаки
+EMAIL_HOST_USER = 'gizarir'
+EMAIL_HOST_PASSWORD = PASSWORD_EMAIL  # пароль от почты
+# ниже Яндекс использует ssl, подробнее о том, что это, почитайте в дополнительных источниках,
+# но включать его здесь обязательно
+EMAIL_USE_SSL = True

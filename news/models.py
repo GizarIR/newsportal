@@ -41,7 +41,12 @@ class Category(models.Model):
     Модель Category - nемы, которые они отражают (спорт, политика, образование и т. д.), поля:
         - название категории, поле уникально
     """
-    name_category = models.CharField(max_length=64, unique=True, verbose_name='Название', help_text='Название категории - 64 символа')
+    name_category = models.CharField(
+        max_length=64,
+        unique=True,
+        verbose_name='Название',
+        help_text='Название категории - 64 символа',
+    )
 
     # переопределяя этот метод мы получаем красивое название объекта  в админ панели
     def __str__(self):

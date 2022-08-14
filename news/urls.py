@@ -21,7 +21,6 @@ urlpatterns = [
     path('article/create/', PostCreateArticle.as_view(), name='post_create_article'),
     path('article/<int:pk>/edit/', PostUpdateArticle.as_view(), name='post_update_article'),
     path('article/<int:pk>/delete/', PostDelete.as_view(), name='post_delete_article'),
-    # Редактирование профиля создал до реализации регистрацию и аутентификацию по заданию необходимо реализовать через библиотеку allauth
     path('profile/<int:pk>/update/', ProfileUserUpdate.as_view(), name='profile_user_update'),
     path('upgrade/', upgrade_me, name='profile_user_upgrade')
 ]

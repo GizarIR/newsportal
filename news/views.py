@@ -166,7 +166,7 @@ def upgrade_me(request):
     if not request.user.groups.filter(name='authors').exists():
         # добавим в модель allauth
         author_group.user_set.add(user)
-        # добавим также автора в нашу таблицу
+        # добавим также автора в нашу таблицу Author
         Author.objects.create(author_user=user)
 
     return redirect('home_news')
