@@ -38,7 +38,7 @@ class Author(models.Model):
 
 class Category(models.Model):
     """
-    Модель Category - nемы, которые они отражают (спорт, политика, образование и т. д.), поля:
+    Модель Category - темы, которые они отражают (спорт, политика, образование и т. д.), поля:
         - название категории, поле уникально
     """
     name_category = models.CharField(
@@ -47,6 +47,12 @@ class Category(models.Model):
         verbose_name='Название',
         help_text='Название категории - 64 символа',
     )
+    subscribers = models.ManyToManyField(
+        User,
+        through='CategorySubscriber',
+        blank=True,
+    )
+
 
     # переопределяя этот метод мы получаем красивое название объекта  в админ панели
     def __str__(self):
@@ -57,6 +63,24 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+
+class CategorySubscriber(models.Model):
+    throughCategory = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+    throughSubscriber = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = 'Связь Категория-Подписчик'
+        verbose_name_plural = 'Связи Категории-Подписчики'
 
 class Post(models.Model):
     """
