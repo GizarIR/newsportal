@@ -26,6 +26,7 @@
             <th>Категория</th>
             <th>Тип</th>
             <th>Описание</th>
+            <th>Операция</th>
         </tr>
         {% for post in finded_posts %}
         <tr>
@@ -47,11 +48,19 @@
             </td>
             <td align="left">
                 {% if post.post_type == 'AR' %}
-                     <a href="{% url 'post_update_article' post.pk %}">{{ post.text_post|truncatewords:10|censor }}...</a>
+                     <a href="{% url 'post_update_article' post.pk %}">{{ post.text_post|truncatewords:5|censor }}...</a>
                 {% else %}
-                     <a href="{% url 'post_update_new' post.pk %}">{{ post.text_post|truncatewords:10|censor }}...</a>
+                     <a href="{% url 'post_update_new' post.pk %}">{{ post.text_post|truncatewords:5|censor }}...</a>
                 {% endif %}
             </td>
+            <td align="left">
+                 {% if post.post_type == 'AR' %}
+                     <button><a href="{% url 'post_delete_article' post.pk %}"> Удалить </a></button>
+                {% else %}
+                     <button><a href="{% url 'post_delete_new' post.pk %}"> Удалить </a></button>
+                {% endif %}
+            </td>
+
         </tr>
         {% endfor %}
     </table>

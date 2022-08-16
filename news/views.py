@@ -14,7 +14,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 # импорты проекта
-from .models import Post, Author
+from .models import Post, Author, CategorySubscriber, Category
 from .filters import PostFilter
 from .forms import PostFormArticle, PostFormNew
 # Отключено поскольку регистрацию и аутентификацию по заданию необходимо реализовать через библиотеку allauth
@@ -57,6 +57,43 @@ class PostDetail(DetailView):
     # Используем другое название объекта, в котором будет выбранный пользователем продукт
     context_object_name = 'post'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # получаем id текущей публикации
+        id_post = self.kwargs.get('pk')
+        # получаем в виде QuerySet список категорий на которые пользователь подписан
+        # (их перечень можно посмотреть в профиле на портале)
+        cat_user = Category.objects.filter(subscribers__username=self.request.user).values('name_category')
+        # получаем в виде QuerySet список категорий для предложения подписки, т.е. те категории на которые пользователь
+        # не пописан, но они есть в списке категорий поста
+        qs_subscride = Post.objects.get(pk=id_post).category.exclude(name_category__in=cat_user)
+        # получаем в виде QuerySet список категорий для предложения отписки, т.е. те категории на которые пользователь
+        # подписан и они есть в списке категорий поста
+        qs_unsubscribe = Post.objects.get(pk=id_post).category.filter(name_category__in=cat_user)
+        # передаем списки в контекст для отображения в шаблоне, id нужен для передачи в функции add/del_subscribe
+        context['cat_for_subscribe'] = qs_subscride.values('id','name_category')
+        context['cat_for_unsubscribe'] = qs_unsubscribe.values('id','name_category')
+        # для правильной отрисовки шаблона передаем в контекст информацию о том пустые ли списки
+        context['offer_subscribe'] = qs_subscride.exists()
+        context['offer_unsubscribe'] = qs_unsubscribe.exists()
+        return context
+
+@login_required
+def add_subscribe(request, **kwargs):
+    pk_cat = kwargs.get('pk')
+    # pk_cat = pk
+    # print(f'Передается категория: {pk_cat}')
+    print('Пользователю', request.user, 'добавлена категория в подписку:', Category.objects.get(pk=pk_cat))
+    Category.objects.get(pk=pk_cat).subscribers.add(request.user)
+    return redirect('home_news')
+
+@login_required
+def del_subscribe(request, **kwargs):
+    pk_cat = kwargs.get('pk')
+    print('Пользователь', request.user, 'отписан от подписок на категорию:', Category.objects.get(pk=pk_cat))
+    Category.objects.get(pk=pk_cat).subscribers.remove(request.user)
+    return redirect('home_news')
+
 
 class PostsListSearch(LoginRequiredMixin, ListView):
     """Представление возвращает форму поиска со списком публикаций - результатом поиска"""
@@ -64,7 +101,7 @@ class PostsListSearch(LoginRequiredMixin, ListView):
     ordering = '-create_date'
     template_name = 'posts_search.html'
     context_object_name = 'finded_posts'
-    paginate_by = 10
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -155,6 +192,12 @@ class ProfileUserUpdate(LoginRequiredMixin, UpdateView):
     template_name = 'profile_edit.html'
     context_object_name = 'profile'
     success_url = reverse_lazy('home_news')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # print(self.request.user.pk)
+        context['subscribes']=Category.objects.filter(subscribers__username=self.request.user).values('name_category')
+        return context
 
 @login_required
 def upgrade_me(request):

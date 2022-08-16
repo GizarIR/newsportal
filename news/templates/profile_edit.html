@@ -12,6 +12,13 @@
     {{ form.as_p }}
     <input type="submit" value="Сохранить" />
 </form>
+<hr>
+<h5>Информация о подписках</h5>
+<p>
+    {% for cat in subscribes %}
+        {{ cat.name_category }}
+    {% endfor %}
+</p>
 
 {% endif %}
 
