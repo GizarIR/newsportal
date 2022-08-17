@@ -32,14 +32,14 @@
     </tr>
 </table>
 
-{% if offer_unsubscribe %}
+{% if offer_subscribe %}
     <p align="left"> Подписаться на новости:
     {% for cat in cat_for_subscribe %}
         <a href="{% url 'add_subscribe' cat.id %}" >{{ cat.name_category }}</a>
     {% endfor %}
     </p>
 {% endif %}
-{% if offer_subscribe %}
+{% if offer_unsubscribe %}
     <p align="left"> Отписаться от новостей:
     {% for cat in cat_for_unsubscribe %}
         <a href="{% url 'del_subscribe' cat.id %}">{{ cat.name_category }}</a>

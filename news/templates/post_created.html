@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Публикация</title>
+</head>
+<body>
+    <h2>От автора: {{ post.author_user }}, новая статья в твоём любимом разделе!.</h2>
+    <p> Дата опубликования: {{ post.create_date }}</p>
+    <p> Заголовок: {{ post.header_post }}</p>
+    <p> Текст публикации: {{ post.text_post|truncatechars:50 }}</p>
+</body>
+</html>

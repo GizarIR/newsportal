@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+
 # группа импорта для реализации механизма добавления в группу пользователя через реадктирование профиля на портале
 # с использованием библиотеки allauth
 from django.shortcuts import redirect
@@ -12,9 +13,13 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
+# группа импортов для реализации рассылки подписчикам
+from django.core.mail import EmailMultiAlternatives # импортируем класс для создание объекта письма с html
+from django.template.loader import render_to_string # импортируем функцию, которая срендерит наш html в текст
+
 
 # импорты проекта
-from .models import Post, Author, CategorySubscriber, Category
+from .models import Post, Author, CategorySubscriber, Category, PostCategory
 from .filters import PostFilter
 from .forms import PostFormArticle, PostFormNew
 # Отключено поскольку регистрацию и аутентификацию по заданию необходимо реализовать через библиотеку allauth
@@ -124,8 +129,35 @@ class PostCreateNew(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.post_type ='NW'
-        # если нужно чтобы автор был тот пользователь который залогинился тогда строчку ниже раскомменируем
         post.author_user = Author.objects.get(author_user=self.request.user)
+        # print(form.cleaned_data['category'].values_list('id', flat=True))
+        # Отправка уведомлений о новой новости
+        email_recipients = []
+        # получаем в виде QuerySet список id категорий поста
+        qs_cat_post_id = form.cleaned_data['category'].values_list('id', flat=True)
+        # затем получаем список id подписчиков для всех категорий поста
+        qs_subs_list_id = CategorySubscriber.objects.filter(throughCategory__in=qs_cat_post_id).values('throughSubscriber__id').distinct()
+        # и наконец получаем список неповторяющихся емейлов подписчиков, values_list - выдает именно список list
+        qs_email_recipients = User.objects.filter(id__in=qs_subs_list_id).values_list('email', flat=True).distinct()
+        email_recipients = qs_email_recipients
+
+        print(f'Список для отправления писем: {email_recipients}')
+
+        html_content = render_to_string(
+            'post_created.html',
+            {
+                'post': post,
+            }
+        )
+        msg = EmailMultiAlternatives(
+            subject=f'Новая публикация в вашем любимом разделе.',
+            body=post.text_post,
+            from_email='gizarir@mail.ru',
+            to=email_recipients,
+        )
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+
         return super().form_valid(form)
 
 
@@ -185,7 +217,7 @@ class PostDelete(LoginRequiredMixin, DeleteView):
     template_name = 'post_delete.html'
     success_url = reverse_lazy('posts_list_search')
 
-# Отключено поскольку регистрацию и аутентификацию по заданию необходимо реализовать через библиотеку allauth
+# Редактирование профиля пользователя
 class ProfileUserUpdate(LoginRequiredMixin, UpdateView):
     form_class = ProfileUserForm
     model = User
