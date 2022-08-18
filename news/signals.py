@@ -10,13 +10,14 @@ from django.template.loader import render_to_string # импортируем ф�
 from .models import Post, PostCategory, CategorySubscriber
 from django.contrib.auth.models import User
 
+
 # @receiver(m2m_changed, sender=PostCategory)
 @receiver(m2m_changed, sender=PostCategory)
 def notify_subscribers(sender, instance, **kwargs):
-    print(type(instance))
+    # print(type(instance))
     post = Post.objects.get(pk=instance.pk)
 
-    if instance is not None:
+    if post.is_created:
         subject_email=f'Новая публикация в вашей любимой категории'
     else:
         subject_email = f'Изменения в публикации {post.header_post} в вашей любимой категории'
@@ -51,5 +52,8 @@ def notify_subscribers(sender, instance, **kwargs):
                 to=[subscriber[0]],
             )
             msg.attach_alternative(html_content, "text/html")
-            print(f'Отправка письма подписчику {subscriber[0]}...') # отправку лучше делать ассинхронным способом (для улучшений)
+
+            # TODO можно усовершенстовать отправку уведомлений подписчикам  def notify_subscribers(sender, instance, **kwargs):
+            # отправку лучше делать ассинхронным способом (для улучшений)
+            print(f'Отправка письма подписчику {subscriber[0]}...')
             msg.send()

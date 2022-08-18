@@ -110,6 +110,7 @@ class Post(models.Model):
     header_post = models.CharField(max_length=128)
     text_post = models.TextField()
     rating_post = models.SmallIntegerField(default=0)
+    is_created = models.BooleanField(default=True) # для обработки в signals.py - только создали или модифицируем
 
     def like(self):
         self.rating_post += 1
