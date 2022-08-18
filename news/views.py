@@ -130,34 +130,37 @@ class PostCreateNew(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         post = form.save(commit=False)
         post.post_type ='NW'
         post.author_user = Author.objects.get(author_user=self.request.user)
-        # print(form.cleaned_data['category'].values_list('id', flat=True))
-        # Отправка уведомлений о новой новости
-        email_recipients = []
-        # получаем в виде QuerySet список id категорий поста
-        qs_cat_post_id = form.cleaned_data['category'].values_list('id', flat=True)
-        # затем получаем список id подписчиков для всех категорий поста
-        qs_subs_list_id = CategorySubscriber.objects.filter(throughCategory__in=qs_cat_post_id).values('throughSubscriber__id').distinct()
-        # и наконец получаем список неповторяющихся емейлов подписчиков, values_list - выдает именно список list
-        qs_email_recipients = User.objects.filter(id__in=qs_subs_list_id).values_list('email', flat=True).distinct()
-        email_recipients = qs_email_recipients
-
-        print(f'Список для отправления писем: {email_recipients}')
-
-        html_content = render_to_string(
-            'post_created.html',
-            {
-                'post': post,
-            }
-        )
-        msg = EmailMultiAlternatives(
-            subject=f'Новая публикация в вашем любимом разделе.',
-            body=post.text_post,
-            from_email='gizarir@mail.ru',
-            to=email_recipients,
-        )
-        msg.attach_alternative(html_content, "text/html")
-        msg.send()
-
+        #
+        # Код ниже - Вариант 1 Отправки уведомлений о новой новости подписчикам реализован при помощи сигналов, поэтому здесь
+        # # отключен, но оставлен исключительно в обучающем ключе как вариант работающей реализации
+        # (его также можно использовать в signals.py там испольщован вариант 2)
+        #
+        # email_recipients = []
+        # # получаем в виде QuerySet список id категорий поста
+        # # print(form.cleaned_data['category'].values_list('id', flat=True))
+        # qs_cat_post_id = form.cleaned_data['category'].values_list('id', flat=True)
+        # # затем получаем список id подписчиков для всех категорий поста
+        # qs_subs_list_id = CategorySubscriber.objects.filter(throughCategory__in=qs_cat_post_id).values('throughSubscriber__id').distinct()
+        # # и наконец получаем список неповторяющихся емейлов подписчиков, values_list - выдает именно список list
+        # qs_email_recipients = User.objects.filter(id__in=qs_subs_list_id).values_list('email', flat=True).distinct()
+        # email_recipients = qs_email_recipients
+        #
+        # print(f'Список для отправления писем: {email_recipients}')
+        #
+        # html_content = render_to_string(
+        #     'post_created.html',
+        #     {
+        #         'post': post,
+        #     }
+        # )
+        # msg = EmailMultiAlternatives(
+        #     subject=f'Новая публикация в вашем любимом разделе.',
+        #     body=post.text_post,
+        #     from_email='gizarir@mail.ru',
+        #     to=email_recipients,
+        # )
+        # msg.attach_alternative(html_content, "text/html")
+        # msg.send()
         return super().form_valid(form)
 
 

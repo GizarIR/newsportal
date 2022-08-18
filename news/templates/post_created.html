@@ -6,9 +6,11 @@
     <title>Публикация</title>
 </head>
 <body>
-    <h2>От автора: {{ post.author_user }}, новая статья в твоём любимом разделе!.</h2>
+    <h2>Здравствуй, {{ username }}. Новая статья в твоём любимом разделе!.</h2>
+    <p> Автор: {{ post.author_user }}</p>
     <p> Дата опубликования: {{ post.create_date }}</p>
     <p> Заголовок: {{ post.header_post }}</p>
-    <p> Текст публикации: {{ post.text_post|truncatechars:50 }}</p>
+    <p> Публикация: {{ post.text_post|truncatechars:50 }}</p>
+    <p> Подробнее по <a href="http://127.0.0.1:8000/posts/{{ post.pk }}">ссылке.</a></p>
 </body>
 </html>

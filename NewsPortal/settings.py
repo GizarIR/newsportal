@@ -53,8 +53,10 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'fpages',
-    'news',
+    # 'news',
     'django_filters',
+    # расширим название приложения в связи с настройкой работы сигналов
+    'news.apps.NewsConfig',
     # добавим приложения для рагистрации и аторизации
     'allauth',
     'allauth.account',
