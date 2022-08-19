@@ -26,6 +26,7 @@ def my_job():
     #  Your job processing logic here...
 
     class PostForEmail:
+        """Класс для создания объектов для передачи в шаблон  """
         def __init__(self, pk, header, text):
             self.pk = pk
             self.header = header
@@ -117,7 +118,7 @@ class Command(BaseCommand):
         # добавляем работу нашему задачнику
         scheduler.add_job(
             my_job,
-            trigger=CronTrigger(day="*/7"),
+            trigger=CronTrigger(day="*/7"), # 1 раз в 7 дней
             # То же, что и интервал, но задача тригера таким образом более понятна django
             # для тестировани используй trigger=CronTrigger(second="*/10")
             id="my_job",  # уникальный айди
