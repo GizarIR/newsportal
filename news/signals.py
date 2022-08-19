@@ -49,7 +49,7 @@ def notify_subscribers(sender, instance, **kwargs):
                 subject=subject_email,
                 body=post.text_post,
                 from_email='gizarir@mail.ru',
-                to=[subscriber[0]],
+                to=[subscriber[0],],
             )
             msg.attach_alternative(html_content, "text/html")
 

@@ -1,7 +1,7 @@
 # импорты django
 import time
 import datetime
-from datetime import datetime, timedelta, date, time
+from datetime import datetime, timedelta, timezone
 from django.http import HttpResponse
 
 from django.shortcuts import render
@@ -33,12 +33,6 @@ from .forms import PostFormArticle, PostFormNew, ProfileUserForm
 
 # импорты для реализации исключения при проверке количества постов в день
 from django.core.exceptions import ValidationError
-
-# страницы простых уведомлений
-
-# TODO нужно понять как передавать в HttpResponce найминги из urls.py
-def limit_pub(request):
-    return HttpResponse("""<h3>Вы превысили лимит 3 публикации в день!</h3><p><a href="http://127.0.0.1:8000/posts/">Вернуться на портал</a></p>""")
 
 
 class PostsList(ListView):
@@ -146,17 +140,16 @@ class PostCreateNew(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         post.author_user = Author.objects.get(author_user=self.request.user)
         # Ограничение на создание не более 3-х публикаций в день
         author = post.author_user
-        d_from = datetime.now().date()
-        print(d_from)
-        # print(f'{datetime.now()}, {datetime.now(tz=time.timezone)}, {datetime.now(tz=time.timezone).date()}')
+        d_from = datetime.now(tz=timezone.utc).date()
+        # print(d_from)
         d_to = d_from + timedelta(days=1)
-        print(d_to)
+        # print(d_to)
         posts = Post.objects.filter(author_user=author, create_date__range=(d_from, d_to))
-        print(posts)
+        # print(posts)
         if len(posts) > 3:
             # raise ValidationError('Вы превысили ограничение на количество постов в день > 3!')
-            return redirect('over_limit_pub')
-
+            return HttpResponse("""<h3>Вы превысили лимит 3 публикации в день!</h3>
+            <p><a href="/posts/">Вернуться на портал</a></p>""")
         #
         # Код ниже - Вариант 1 Отправки уведомлений о новой новости подписчикам реализован при помощи сигналов, поэтому здесь
         # # отключен, но оставлен исключительно в обучающем ключе как вариант работающей реализации

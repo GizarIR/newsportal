@@ -2,7 +2,7 @@ from django.urls import path
 # Импортируем созданное нами представление
 from .views import (
     PostsList, PostDetail, PostsListSearch, PostCreateArticle, PostCreateNew, PostUpdateNew, PostUpdateArticle,
-    PostDelete, upgrade_me, add_subscribe, del_subscribe, limit_pub
+    PostDelete, upgrade_me, add_subscribe, del_subscribe,
 )
 
 # Отключено поскольку регистрацию и аутентификацию по заданию необходимо реализовать через библиотеку allauth
@@ -25,5 +25,4 @@ urlpatterns = [
     path('upgrade/', upgrade_me, name='profile_user_upgrade'),
     path('add_subscribe/<int:pk>/', add_subscribe, name='add_subscribe'),
     path('del_subscribe/<int:pk>/', del_subscribe, name='del_subscribe'),
-    path('limit_pub/', limit_pub, name='over_limit_pub')
 ]
