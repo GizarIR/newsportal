@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Публикации недели</title>
+</head>
+<body>
+    <h2>Здравствуй, {{ username }}. Вот какие публикации вышли за неделю в твоём любимом разделе!</h2>
+    <hr>
+    {% for post in posts %}
+        <p style="font-size:24px"> Заголовок: {{ post.header }}</p>
+        <p style="font-size:14px"> Публикация: {{ post.text|truncatechars:50 }}</p>
+        <p> <big><i>Подробнее по <a href="http://127.0.0.1:8000/posts/{{ post.pk }}">ссылке.</a></i></big></p>
+        <hr>
+    {% endfor %}
+</body>
+</html>

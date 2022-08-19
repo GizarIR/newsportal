@@ -63,6 +63,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # ... include the providers you want to enable for work allauth library:
     'allauth.socialaccount.providers.google',
+#    модуль за запуска задач по расписанию
+    'django_apscheduler',
+
 ]
 
 
@@ -201,3 +204,11 @@ EMAIL_HOST_PASSWORD = PASSWORD_EMAIL  # пароль от почты
 # ниже Яндекс использует ssl, подробнее о том, что это, почитайте в дополнительных источниках,
 # но включать его здесь обязательно
 EMAIL_USE_SSL = True
+
+# (вариант - 2) Настройки задач по расписанию  - pip install django-apscheduler
+# формат даты, которую будет воспринимать наш задачник (вспоминаем модуль по фильтрам)
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+
+# если задача не выполняется за 25 секунд, то она автоматически снимается, можете поставить время побольше,
+# но как правило, это сильно бьёт по производительности сервера
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
