@@ -11,16 +11,20 @@ from .models import Post, PostCategory, CategorySubscriber
 from django.contrib.auth.models import User
 
 # импорт задач celery
+#  Также необходимо установить Celery, Redis и запустить 4 терминала
+# 1 - общий для запуска сервера Redis
+# 2 - терминал окружения проекта: python3 manage.py runserver
+# 3 - терминал окружения проекта для запуска задач без расписания: celery -A NewsPortal worker -l INFO --concurrency=10
+#  где --concurrency - количество процессов, которые могут на нём запускаться
+# 4 - (опционально) терминал окружения проекта для запуска задач с расписанием: celery -A NewsPortal beat -l INFO
+# где beat м.б. заменен на флаг -B после INFO
 from .tasks import send_mails_new_pub
 
 
-# @receiver(m2m_changed, sender=PostCategory)
+
 @receiver(m2m_changed, sender=PostCategory)
 def notify_subscribers(sender, instance, **kwargs):
-    # Ниже код ("commented") организации уведомления о новой публикации подписчиков, который был реализован
-    # только на сигналах. В дальнейшем часть кода был перенесен в задачи tasks.py для усовершенствования и
-    # отправки писем при помощи асинхронной модели
-
+    """Уведомление подписчиков о выходе новой публикации в категории"""
     post = Post.objects.get(pk=instance.pk)
 
     if post.is_created:
@@ -51,8 +55,12 @@ def notify_subscribers(sender, instance, **kwargs):
                     'username': subscriber[2] if subscriber[2] else subscriber[1],
                 }
             )
+
+            # запускаем асинхронно для каждого отправления
             send_mails_new_pub.delay(post.id, subject_email, [subscriber[0],], html_content)
 
+            # Ниже код ("commented") перенесен в задачи tasks.py для усовершенствования и
+            # отправки писем при помощи асинхронной модели с использованием Celery и Redis
             # msg = EmailMultiAlternatives(
             #     subject=subject_email,
             #     body=post.text_post,
