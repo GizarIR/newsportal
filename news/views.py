@@ -34,6 +34,8 @@ from .forms import PostFormArticle, PostFormNew, ProfileUserForm
 # импорты для реализации исключения при проверке количества постов в день
 from django.core.exceptions import ValidationError
 
+# ограничение на количество публикаций в день для автора
+LIMIT_POSTS = 20
 
 class PostsList(ListView):
     """Представление возвращает список публикаций """
@@ -146,7 +148,7 @@ class PostCreateNew(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         # print(d_to)
         posts = Post.objects.filter(author_user=author, create_date__range=(d_from, d_to))
         # print(posts)
-        if len(posts) > 3:
+        if len(posts) > LIMIT_POSTS:
             # raise ValidationError('Вы превысили ограничение на количество постов в день > 3!')
             return HttpResponse("""<h3>Вы превысили лимит 3 публикации в день!</h3>
             <p><a href="/posts/">Вернуться на портал</a></p>""")
@@ -195,6 +197,17 @@ class PostCreateArticle(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
     def form_valid(self, form):
         post = form.save(commit=False)
         post.post_type ='AR'
+        post.author_user = Author.objects.get(author_user=self.request.user)
+
+        # Ограничение на создание не более 3-х публикаций в день
+        author = post.author_user
+        d_from = datetime.now(tz=timezone.utc).date()
+        d_to = d_from + timedelta(days=1)
+        posts = Post.objects.filter(author_user=author, create_date__range=(d_from, d_to))
+        if len(posts) > LIMIT_POSTS:
+            return HttpResponse("""<h3>Вы превысили лимит 3 публикации в день!</h3>
+            <p><a href="/posts/">Вернуться на портал</a></p>""")
+
         return super().form_valid(form)
 
 class PostUpdateNew(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -224,27 +237,15 @@ class PostUpdateArticle(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
         post.is_created = False
         return super().form_valid(form)
 
-# # Вариант как в задании (html файлы тоже подготовлены)
-# class PostDeleteNew(DeleteView):
-#     model = Post
-#     template_name = 'post_delete_new.html'
-#     success_url = reverse_lazy('posts_list_search')
-#
-# class PostDeleteArticle(DeleteView):
-#     model = Post
-#     template_name = 'post_delete_article.html'
-#     success_url = reverse_lazy('posts_list_search')
-
-# удаление в задании можно сделать одним представлением, но с разной маршрутизацией, так на мой взгляд меньше кода
-# и логичнее
 class PostDelete(LoginRequiredMixin, DeleteView):
     """Представление возвращает форму удаления публикации"""
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('posts_list_search')
 
-# Редактирование профиля пользователя
+
 class ProfileUserUpdate(LoginRequiredMixin, UpdateView):
+    """Редактирование профиля пользователя"""
     form_class = ProfileUserForm
     model = User
     template_name = 'profile_edit.html'
@@ -259,7 +260,7 @@ class ProfileUserUpdate(LoginRequiredMixin, UpdateView):
 
 @login_required
 def upgrade_me(request):
-    """ Фукнкция добавлена при настройке allauth. Нужна для реализации механизма: пользователь который прошел регистрацию
+    """ Функция добавлена при настройке allauth. Нужна для реализации механизма: пользователь который прошел регистрацию
         и залогинился, может быть включен в группу authors. Данная функция нужна для использования ее в urls.py"""
     user = request.user
     author_group = Group.objects.get(name='authors')
