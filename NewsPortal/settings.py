@@ -224,3 +224,13 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 # метод сериализации результатов
 CELERY_RESULT_SERIALIZER = 'json'
+
+# Группа настроек кэширования
+# Документация тут: https://django.fun/docs/django/ru/4.0/topics/cache/
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache', # включаем кэширование на файлах
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'), # Указываем, куда будем сохранять кэшируемые файлы! Не забываем создать папку cache_files внутри папки с manage.py!
+        # 'TIMEOUT': 60, - можно устанавливать значение  сколько объект будет храниться в кэше (по умолчанию 300 сек)
+    }
+}

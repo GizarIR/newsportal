@@ -3,11 +3,13 @@
 
 {% load custom_filters %}
 
-<!-- Название у нас будет Posts -->
-{% block title %}
-Posts
-{% endblock title %}
-
+{% load cache %}
+{% cache 60 title %}
+    <!-- Название у нас будет Posts -->
+    {% block title %}
+    Публикации
+    {% endblock title %}
+{% endcache %}
 <!-- В контенте на странице мы выводим все статьи и новости -->
 {% block content %}
 <h1>Публикации портала:</h1>

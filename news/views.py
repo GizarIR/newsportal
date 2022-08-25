@@ -34,6 +34,9 @@ from .forms import PostFormArticle, PostFormNew, ProfileUserForm
 # импорты для реализации исключения при проверке количества постов в день
 from django.core.exceptions import ValidationError
 
+# группа импортов для работы с кэшем
+from django.core.cache import cache
+
 # ограничение на количество публикаций в день для автора
 LIMIT_POSTS = 20
 
@@ -72,6 +75,20 @@ class PostDetail(DetailView):
     # Используем другое название объекта, в котором будет выбранный пользователем продукт
     context_object_name = 'post'
 
+    # функция добавлена при более тонкой настройки работы кэша, чтобы при обновлении поста он обновлялся и вкэше
+    # также внесены изменения в модель Post
+    # переопределяем метод получения объекта,
+    def get_object(self, *args, **kwargs):
+        # кэш очень похож на словарь, и метод get действует так же. Он забирает значение по ключу,
+        # если его нет, то забирает None.
+        obj = cache.get(f'post-{self.kwargs["pk"]}', None)
+
+        # если объекта нет в кэше, то получаем его и записываем в кэш
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+        return obj
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # получаем id текущей публикации
@@ -92,6 +109,7 @@ class PostDetail(DetailView):
         context['offer_subscribe'] = qs_subscride.exists()
         context['offer_unsubscribe'] = qs_unsubscribe.exists()
         return context
+
 
 @login_required
 def add_subscribe(request, **kwargs):

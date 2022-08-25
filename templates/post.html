@@ -4,10 +4,13 @@
 <!-- подгрузим собственные фильтры из файла custom_filters.py-->
 {% load custom_filters %}
 
-<!-- Название у нас будет Post -->
-{% block title %}
-Публикация
-{% endblock title %}
+{% load cache %}
+{% cache 60 title %}
+    <!-- Название у нас будет Post -->
+    {% block title %}
+    Публикация
+    {% endblock title %}
+{% endcache %}
 
 <!-- В контенте на странице мы выводим статью -->
 {% block content %}

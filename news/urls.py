@@ -9,10 +9,14 @@ from .views import (
 # в данном случае была реализация через дженерики
 from .views import ProfileUserUpdate
 
+# группа импортов для организации кэширования
+from django.views.decorators.cache import cache_page
+
 
 urlpatterns = [
-    path('', PostsList.as_view(), name='home'),
-    path('news/',PostsList.as_view(), name='home_news'),
+    path('', cache_page (60 * 1) (PostsList.as_view()), name='home'),
+    path('news/', cache_page (60 * 1) (PostsList.as_view()), name='home_news'),
+    # path('<int:pk>', cache_page (60 * 5) (PostDetail.as_view()), name='post_detail'), # переключено на API cache
     path('<int:pk>', PostDetail.as_view(), name='post_detail'),
     path('news/search/', PostsListSearch.as_view(), name='posts_list_search'),
     path('news/create/', PostCreateNew.as_view(), name='post_create_new'),

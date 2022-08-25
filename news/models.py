@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.db.models import Aggregate, Sum
 from django.urls import reverse
 
+# группа импортов для работы кэширования
+from django.core.cache import cache
 
 # Create your models here.
 
@@ -132,6 +134,14 @@ class Post(models.Model):
     # объекта (записи таблицы)
     def get_absolute_url(self):
         return reverse('post_detail', args=[str(self.pk)])
+
+    # группа функций необходимых чтобы при изменении публикации она обновлялась в кэше,
+    # __str__ и get_absolute_url тоже нужны
+    # для этого переопределяем метод save
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs) #сначала вызываем метод родителя, чтобы объект сохранился
+        cache.delete(f'post-{self.pk}') # затем удаляем его из кэша, чтобы сбросить его
+
 
     # переопределяя этот класс мы получаем красивые названия классов в админ панели
     class Meta:
