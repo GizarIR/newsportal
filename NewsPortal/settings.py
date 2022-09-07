@@ -13,7 +13,13 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os.path
 from pathlib import Path
 
-# Безопасное хранение паролей
+# TODO: Безопасное хранение паролей (реализован), но есть способ проще  - надо проверить
+# есть более простой способ который нужно проверить:
+# 1. создаем файл .env там же где manage.py и  добавляем в него  PASSWORD=fhgjhs или любые переменные
+# 2. добавляем его в .gitignore
+# 3. import os
+# 4. в settings.py PSWD=os.getenv("PASSWORD") , константа становиться доступной для использования
+
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
