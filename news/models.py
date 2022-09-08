@@ -58,12 +58,14 @@ class Category(models.Model):
         User,
         through='CategorySubscriber',
         blank=True,
-        verbose_name="Подписчик"
+        verbose_name="Подписчики"
     )
 
     def get_subscribers(self):
         """метод возвращает список подписчиков, добавлен для отображения категорий в админке"""
-        return "\n".join([s.username for s in self.subscribers.all()])
+        return " ".join([s.username for s in self.subscribers.all()])
+
+    get_subscribers.short_description = "Подписчики"
 
     # переопределяя этот метод мы получаем красивое название объекта  в админ панели
     def __str__(self):
@@ -81,12 +83,14 @@ class CategorySubscriber(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
+        verbose_name="Категория",
     )
     throughSubscriber = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
+        verbose_name="Подписчик",
     )
 
     class Meta:
@@ -157,6 +161,8 @@ class Post(models.Model):
         """метод возвращает список категорий, добавлен для отображения категорий в админке"""
         return "\n".join([c.name_category for c in self.category.all()])
 
+    get_cat.short_description = "Категории"
+
     # переопределяя этот класс мы получаем красивые названия классов в админ панели
     class Meta:
         verbose_name = 'Публикация'
@@ -169,8 +175,8 @@ class PostCategory(models.Model):
         - связь «один ко многим» с моделью Post;
         - связь «один ко многим» с моделью Category.
     """
-    throughPost = models.ForeignKey('Post', on_delete=models.CASCADE)
-    throughCategory = models.ForeignKey('Category', on_delete=models.CASCADE)
+    throughPost = models.ForeignKey('Post', on_delete=models.CASCADE, verbose_name="Публикация")
+    throughCategory = models.ForeignKey('Category', on_delete=models.CASCADE, verbose_name="Категория")
 
     # def __str__(self):
     #     return f"{Category.objects.get(postcategory__throughCategory=self.throughCategory).values('name_category')}"
