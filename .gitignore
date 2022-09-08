@@ -5,3 +5,5 @@ __pycache__/
 .DS_Store
 **/__pycache__/
 /cache_files/
+cash_files/
+BackUp/
