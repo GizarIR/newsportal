@@ -14,8 +14,8 @@ class Author(models.Model):
         - cвязь «один к одному», с встроенной моделью пользователей User;
         - рейтинг пользователя.
     """
-    author_user = models.OneToOneField(User, on_delete=models.CASCADE) #параметр on_delete м.б. SET_NULL
-    rating_author = models.SmallIntegerField(default=0)
+    author_user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Автор") #параметр on_delete м.б. SET_NULL
+    rating_author = models.SmallIntegerField(default=0, verbose_name="Рэйтинг")
 
     def update_rating(self):
         """
@@ -38,6 +38,11 @@ class Author(models.Model):
     def __str__(self):
         return f'{self.author_user.username}'
 
+    class Meta:
+        verbose_name = 'Автор'
+        verbose_name_plural = 'Авторы'
+
+
 class Category(models.Model):
     """
     Модель Category - темы, которые они отражают (спорт, политика, образование и т. д.), поля:
@@ -46,15 +51,19 @@ class Category(models.Model):
     name_category = models.CharField(
         max_length=64,
         unique=True,
-        verbose_name='Название',
+        verbose_name='Категория',
         help_text='Название категории - 64 символа',
     )
     subscribers = models.ManyToManyField(
         User,
         through='CategorySubscriber',
         blank=True,
+        verbose_name="Подписчик"
     )
 
+    def get_subscribers(self):
+        """метод возвращает список подписчиков, добавлен для отображения категорий в админке"""
+        return "\n".join([s.username for s in self.subscribers.all()])
 
     # переопределяя этот метод мы получаем красивое название объекта  в админ панели
     def __str__(self):
@@ -103,16 +112,18 @@ class Post(models.Model):
         (article, 'Статья'),
     ]
 
-    author_user = models.ForeignKey('Author', on_delete=models.CASCADE)
+    author_user = models.ForeignKey('Author', on_delete=models.CASCADE, verbose_name="Автор")
     post_type = models.CharField(max_length=2,
                                   choices=POST_TYPES,
-                                  default=article)
-    create_date = models.DateTimeField(auto_now_add=True)
-    category = models.ManyToManyField('Category', through='PostCategory')
-    header_post = models.CharField(max_length=128)
-    text_post = models.TextField()
-    rating_post = models.SmallIntegerField(default=0)
-    is_created = models.BooleanField(default=True) # для обработки в signals.py - только создали или модифицируем
+                                  default=article,
+                                  verbose_name='Тип поста',
+                                 )
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания',)
+    category = models.ManyToManyField('Category', through='PostCategory', verbose_name='Категория')
+    header_post = models.CharField(max_length=128, verbose_name="Заголовок")
+    text_post = models.TextField(verbose_name="Текст")
+    rating_post = models.SmallIntegerField(default=0, verbose_name="Рэйтинг")
+    is_created = models.BooleanField(default=True, verbose_name="Редакция") # для обработки в signals.py - только создали или модифицируем
 
     def like(self):
         self.rating_post += 1
@@ -142,6 +153,9 @@ class Post(models.Model):
         super().save(*args, **kwargs) #сначала вызываем метод родителя, чтобы объект сохранился
         cache.delete(f'post-{self.pk}') # затем удаляем его из кэша, чтобы сбросить его
 
+    def get_cat(self):
+        """метод возвращает список категорий, добавлен для отображения категорий в админке"""
+        return "\n".join([c.name_category for c in self.category.all()])
 
     # переопределяя этот класс мы получаем красивые названия классов в админ панели
     class Meta:
@@ -175,11 +189,11 @@ class Comment(models.Model):
         - дата и время создания комментария;
         - рейтинг комментария.
     """
-    post = models.ForeignKey('Post', on_delete=models.CASCADE)
-    author_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    text_comment = models.TextField()
-    create_datetime = models.DateTimeField(auto_now_add=True)
-    rating_comment = models.SmallIntegerField(default=0)
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, verbose_name='Публикация')
+    author_user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
+    text_comment = models.TextField(verbose_name="Комментарий")
+    create_datetime = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    rating_comment = models.SmallIntegerField(default=0, verbose_name='Рэйтинг')
 
     def like(self):
         self.rating_comment += 1
@@ -188,3 +202,7 @@ class Comment(models.Model):
     def dislike(self):
         self.rating_comment -= 1
         self.save()
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'

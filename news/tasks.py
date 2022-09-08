@@ -91,7 +91,7 @@ def news_week():
                 throughPost__create_date__range=(d_to, d_from)
             ).distinct()
         )
-        # преобразуем в спсисок объектов для удобной передачи в шаблон
+        # преобразуем в список объектов для удобной передачи в шаблон
         posts_for_email = []
         for post in posts_list:
             posts_for_email.append(PostForEmail(post[0], post[1], post[2]))
