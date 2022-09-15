@@ -37,11 +37,33 @@ from django.core.exceptions import ValidationError
 # группа импортов для работы с кэшем
 from django.core.cache import cache
 
+# включаем логирование
+import logging
+# ниже  можно в качестве параметра подставлять все описанные loggers
+# если есть необходимость отлавливать сообщения из разных модулей
+# тогда можно в качестве параметра использовать __name__
+# но при этом в settings.py.LOGGING нужно описать иерархию логеров
+# и использовать propagate для исключения двойной обработки сообщений
+# разными логерами находящимися в одной иерархии
+# logger = logging.getLogger('file_general')
+logger = logging.getLogger('django')
 # ограничение на количество публикаций в день для автора
 LIMIT_POSTS = 20
 
+
+def index_test(request):
+    # отправим сообщение в файл лога
+    logger.debug("Hello! --------DEBUG--------Enjoy:)")
+    logger.info("Hello! --------INFO--------Enjoy:)")
+    logger.warning("Hello! --------WARNING--------Enjoy:)")
+    logger.error("Hello! --------ERROR--------Enjoy:)")
+    logger.critical("Hello! --------CRITICAL--------Enjoy:)")
+    # logger_django.error("Hello! --------DJANGO-ERROR--------Enjoy:)")
+    return HttpResponse("<p> Сообщение для тестирования </p>")
+
 class PostsList(ListView):
     """Представление возвращает список публикаций """
+
     # Указываем модель, объекты которой мы будем выводить
     # строчка ниже эквивалент queryset = Post.objects.all(), те если нужно можно использовать фильтры
     model = Post
@@ -68,6 +90,7 @@ class PostsList(ListView):
 
 class PostDetail(DetailView):
     """Представление возвращает страницу с описанием публикации"""
+
     # Модель всё та же, но мы хотим получать информацию по отдельной статье
     model = Post
     # Используем другой шаблон — post.html

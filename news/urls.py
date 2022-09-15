@@ -2,7 +2,7 @@ from django.urls import path
 # Импортируем созданное нами представление
 from .views import (
     PostsList, PostDetail, PostsListSearch, PostCreateArticle, PostCreateNew, PostUpdateNew, PostUpdateArticle,
-    PostDelete, upgrade_me, add_subscribe, del_subscribe,
+    PostDelete, upgrade_me, add_subscribe, del_subscribe, index_test
 )
 
 # Отключено поскольку регистрацию и аутентификацию по заданию необходимо реализовать через библиотеку allauth
@@ -12,8 +12,18 @@ from .views import ProfileUserUpdate
 # группа импортов для организации кэширования
 from django.views.decorators.cache import cache_page
 
+# -----------Тестирование логирования____________
+import logging
+
+logger_dr = logging.getLogger('django.request')
+logger_cn = logging.getLogger('django')
+
+logger_dr.error("Hello! I'm error in your app. Enjoy:)")
+logger_cn.error("Hello! I'm error in your app. Enjoy:)")
+# ----------КОНЕЦ тестирования логирования-----------
 
 urlpatterns = [
+    path('test/', index_test, name='index_test'),
     path('', cache_page (60 * 1) (PostsList.as_view()), name='home'),
     path('news/', cache_page (60 * 1) (PostsList.as_view()), name='home_news'),
     # path('<int:pk>', cache_page (60 * 5) (PostDetail.as_view()), name='post_detail'), # переключено на API cache
