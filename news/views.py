@@ -38,7 +38,7 @@ from django.core.exceptions import ValidationError
 from django.core.cache import cache
 
 # включаем логирование
-import logging
+# import logging
 # ниже  можно в качестве параметра подставлять все описанные loggers
 # если есть необходимость отлавливать сообщения из разных модулей
 # тогда можно в качестве параметра использовать __name__
@@ -46,19 +46,19 @@ import logging
 # и использовать propagate для исключения двойной обработки сообщений
 # разными логерами находящимися в одной иерархии
 # logger = logging.getLogger('file_general')
-logger = logging.getLogger('django')
+# logger = logging.getLogger('django')
 # ограничение на количество публикаций в день для автора
 LIMIT_POSTS = 20
 
 
 def index_test(request):
     # отправим сообщение в файл лога
-    logger.debug("Hello! --------DEBUG--------Enjoy:)")
-    logger.info("Hello! --------INFO--------Enjoy:)")
-    logger.warning("Hello! --------WARNING--------Enjoy:)")
-    logger.error("Hello! --------ERROR--------Enjoy:)")
-    logger.critical("Hello! --------CRITICAL--------Enjoy:)")
-    # logger_django.error("Hello! --------DJANGO-ERROR--------Enjoy:)")
+    # logger.debug("Hello! --------DEBUG--------Enjoy:)")
+    # logger.info("Hello! --------INFO--------Enjoy:)")
+    # logger.warning("Hello! --------WARNING--------Enjoy:)")
+    # logger.error("Hello! --------ERROR--------Enjoy:)")
+    # logger.critical("Hello! --------CRITICAL--------Enjoy:)")
+    # # logger_django.error("Hello! --------DJANGO-ERROR--------Enjoy:)")
     return HttpResponse("<p> Сообщение для тестирования </p>")
 
 class PostsList(ListView):
