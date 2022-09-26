@@ -3,11 +3,13 @@ from django_filters import FilterSet
 from .models import Post, PostCategory, Category, Author
 import django.forms
 
+from django.utils.translation import gettext as _
+
 class PostFilter(FilterSet):
     post__icontains = CharFilter(
         field_name='header_post',
         lookup_expr='icontains',
-        label='Заголовок',
+        label=_('Title'), # Заголовок
     )
 
     # # Автор
@@ -22,13 +24,13 @@ class PostFilter(FilterSet):
     for_category =  ModelChoiceFilter(
         field_name='postcategory__throughCategory',
         queryset=Category.objects.all(),
-        label='Категория',
-        empty_label='любая',
+        label=_('Category'), # Категория
+        empty_label=_('Any'), # любая
     )
 
     # Создадим на странице фильтр дат, для его отрисовки используем виджет
     create_date = DateFilter(
-        label='Позже даты',
+        label=_('Later dates'), #Позже даты
         lookup_expr='gte',
         # виджеты - это такие поля, которые реализованы через отдельные классы и позволяют за счет настройки их атрибутов
         # получать визуализацию специфических полей фильтров без отдельной прорисовки их в html шаблонах

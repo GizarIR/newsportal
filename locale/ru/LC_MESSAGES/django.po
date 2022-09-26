@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-26 19:20+0300\n"
+"POT-Creation-Date: 2022-09-26 20:37+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,15 +24,197 @@ msgstr ""
 msgid "Advanced options"
 msgstr "Дополнительные опции"
 
+#: news/admin.py:10
+msgid "Zeroing the rating"
+msgstr "Обнуление рэйтинга"
+
+#: news/admin.py:36
+msgid "Category of rating"
+msgstr "Категории рейтинга"
+
+#: news/admin.py:41
+msgid "less than 50 points"
+msgstr "Меньше 50 баллов"
+
+#: news/admin.py:42
+msgid "more than 100 points"
+msgstr "Больше 100 баллов"
+
+#: news/filters.py:12 news/models.py:136
+msgid "Title"
+msgstr "Заголовок"
+
+#: news/filters.py:27 news/models.py:63 news/models.py:85 news/models.py:95
+#: news/models.py:135 news/models.py:188
+msgid "Category"
+msgstr "Категория"
+
+#: news/filters.py:28
+msgid "Any"
+msgstr "Любая"
+
+#: news/filters.py:33
+msgid "Later dates"
+msgstr "Позже даты"
+
+#: news/forms.py:34
+msgid ""
+"The title of the article should not completely coincide with the text of the article."
+msgstr "Заголовок статьи не может совпадать с текстом."
+
+#: news/forms.py:59
+msgid "The text of the news can not be more than 256 characters."
+msgstr "Текст новости не может быть больше 265 символов."
+
+#: news/forms.py:70
+msgid ""
+"The headline of the news should not completely coincide with the text of the news."
+msgstr "Заголовок новости не может совпадать с текстом."
+
 #: news/models.py:64
 msgid "Name of category - 64 characters"
 msgstr "Наименование категории - 64 символа"
+
+#: news/models.py:70 news/models.py:77
+#, fuzzy
+#| msgctxt "Subscriber for article"
+#| msgid "Subscriber"
+msgid "Subscribers"
+msgstr "Подписчик"
+
+#: news/models.py:86 news/models.py:173
+msgid "Categories"
+msgstr "Категории"
 
 #: news/models.py:102
 msgctxt "Subscriber for article"
 msgid "Subscriber"
 msgstr "Подписчик"
 
+#: news/models.py:106
+msgid "Connection Category-Subscriber"
+msgstr "Связь Категория - Подписчик"
+
+#: news/models.py:107
+msgid "Connections Categories-Subscribers"
+msgstr "Связи Категории - Подписчики"
+
+#: news/models.py:128 news/models.py:208
+msgid "Author"
+msgstr "Автор"
+
+#: news/models.py:132
+msgid "Type of post"
+msgstr "Тип публикации"
+
+#: news/models.py:134 news/models.py:210
+msgid "Create date"
+msgstr "Дата создания"
+
+#: news/models.py:137
+msgid "Text"
+msgstr "Текст"
+
+#: news/models.py:138 news/models.py:211
+msgid "Rating"
+msgstr "Рэйтинг"
+
+#: news/models.py:139
+msgid "Created"
+msgstr "Создана"
+
+#: news/models.py:177 news/models.py:187 news/models.py:207
+msgid "Publication"
+msgstr "Публикация"
+
+#: news/models.py:178
+msgid "Publications"
+msgstr "Публикации"
+
+#: news/models.py:195
+msgid "Connection Publication - Category"
+msgstr "Связь Публикация - Категория"
+
+#: news/models.py:196
+msgid "Connections Publications - Categories"
+msgstr "Связи Публикации - Категории"
+
+#: news/models.py:209 news/models.py:222
+msgid "Comment"
+msgstr "Комментарий"
+
+#: news/models.py:223
+msgid "Comments"
+msgstr "Комментарии"
+
+#: news/signals.py:33
+msgid "A new post in your favorite category"
+msgstr "Новая публикация в вашей любимой категории"
+
+#: news/signals.py:35
+#, python-brace-format
+msgid "Changes in the publication {post.header_post} in your favorite category"
+msgstr "Изменения в публикации {post.header_post} в вашей любимой категории"
+
+#: news/signals.py:49
+#, python-brace-format
+msgid ""
+"The list for sending mailing_list emails has been prepared for Celery:{mailing_list}"
+msgstr "Список рассылки mailing_list подготовлен для  Celery: {mailing_list}"
+
+#: news/tasks.py:28
+#, python-brace-format
+msgid "Sending a message to the subscriber {subscriber[0]}..."
+msgstr "Отправка сообщения для подписчика {subscriber[0]}..."
+
+#: news/tasks.py:36
+#, python-brace-format
+msgid "Weekly newsletter in your favorite category: {cat}"
+msgstr "Еженедельная рассылка в вашей любимой категории: {cat}"
+
+#: news/tasks.py:37
+msgid "Weekly newsletter"
+msgstr "Еженедельная рассылка"
+
+#: news/tasks.py:43
+#, python-brace-format
+msgid "Sending an email to the {subscriber[0]} of the {cat} category..."
+msgstr "Отправка письма подписчику {subscriber[0]} категории {cat}..."
+
+#: news/tasks.py:47
+#, python-brace-format
+msgid "Error: Error sending an email to: {subscriber[0]}"
+msgstr "Error: Ошибка отправки письма по адресу: {subscriber[0]}"
+
+#: news/tasks.py:59
+msgid "Start a weekly newsletter"
+msgstr "Запуск еженедельной рассылки новостей"
+
+#: news/tasks.py:76
+#, python-brace-format
+msgid ""
+"Mailing list mailing_list: {mailing_list} for the category {cat.name_category}"
+msgstr "Список рассылки mailing_list: {mailing_list} для категории {cat.name_category}"
+
+#: news/tasks.py:99
+msgid "The list of posts for mailing has been prepared"
+msgstr "Список постов для рассылки  подготовлен"
+
+#: news/tasks.py:130
+msgid "Weekly newsletter completed successfully."
+msgstr "Еженедельная рассылка завершена успешно."
+
 #: news/views.py:69
-msgid "Hello world!"
-msgstr "Привет мир!"
+msgid "Test string"
+msgstr "Тестовая строка"
+
+#: news/views.py:203 news/views.py:258
+msgid ""
+"<h3>You have exceeded the limit of 3 publications per day!</h3>\n"
+"            <p><a href=\"/posts/\">Return to the portal</a></p>"
+msgstr ""
+"<h3>Вы превысили лимит 3 публикации в день!</h3>\n"
+"            <p><a href=\"/posts/\">Вернуться на портал</a></p>"
+
+#~ msgid "Hello world!"
+#~ msgstr "Привет мир!"

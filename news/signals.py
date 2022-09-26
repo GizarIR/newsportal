@@ -21,6 +21,8 @@ from django.contrib.auth.models import User
 from .tasks import send_mails_new_pub
 
 
+from django.utils.translation import gettext as _
+
 
 @receiver(m2m_changed, sender=PostCategory)
 def notify_subscribers(sender, instance, **kwargs):
@@ -28,9 +30,9 @@ def notify_subscribers(sender, instance, **kwargs):
     post = Post.objects.get(pk=instance.pk)
 
     if post.is_created:
-        subject_email=f'Новая публикация в вашей любимой категории'
+        subject_email=_(f'A new post in your favorite category') # Новая публикация в вашей любимой категории
     else:
-        subject_email = f'Изменения в публикации {post.header_post} в вашей любимой категории'
+        subject_email = _(f'Changes in the publication {post.header_post} in your favorite category')  #Изменения в публикации {post.header_post} в вашей любимой категории
 
     # Вариант 2 отправка - писем подписчикам, вариант 1 см во views.py
     mailing_list = []
@@ -44,7 +46,7 @@ def notify_subscribers(sender, instance, **kwargs):
             'throughCategory__name_category',
         ).distinct()
     )
-    print(f'Список для отправления писем mailing_list подготовлен для Celery: {mailing_list}')
+    print(_(f'The list for sending mailing_list emails has been prepared for Celery: {mailing_list}')) # Список для отправления писем mailing_list подготовлен для Celery: {mailing_list}
 
     for subscriber in mailing_list:
         if subscriber[0] is not None:

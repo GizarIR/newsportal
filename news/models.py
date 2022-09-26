@@ -60,21 +60,21 @@ class Category(models.Model):
     name_category = models.CharField(
         max_length=64,
         unique=True,
-        verbose_name='Категория',
+        verbose_name=_('Category'),
         help_text=_('Name of category - 64 characters'),
     )
     subscribers = models.ManyToManyField(
         User,
         through='CategorySubscriber',
         blank=True,
-        verbose_name="Подписчики",
+        verbose_name=_("Subscribers"),
     )
 
     def get_subscribers(self):
         """метод возвращает список подписчиков, добавлен для отображения категорий в админке"""
         return " ".join([s.username for s in self.subscribers.all()])
 
-    get_subscribers.short_description = "Подписчики"
+    get_subscribers.short_description = _("Subscribers")
 
     # переопределяя этот метод мы получаем красивое название объекта  в админ панели
     def __str__(self):
@@ -82,8 +82,8 @@ class Category(models.Model):
 
     # переопределяя этот класс мы получаем красивые названия классов в админ панели
     class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
+        verbose_name = _('Category')
+        verbose_name_plural = _('Categories')
 
 
 class CategorySubscriber(models.Model):
@@ -92,7 +92,7 @@ class CategorySubscriber(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        verbose_name="Категория",
+        verbose_name=_("Category"),
     )
     throughSubscriber = models.ForeignKey(
         User,
@@ -103,8 +103,8 @@ class CategorySubscriber(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Связь Категория-Подписчик'
-        verbose_name_plural = 'Связи Категории-Подписчики'
+        verbose_name = _('Connection Category-Subscriber')
+        verbose_name_plural = _('Connections Categories-Subscribers')
 
 class Post(models.Model):
     """
@@ -125,18 +125,18 @@ class Post(models.Model):
         (article, 'Статья'),
     ]
 
-    author_user = models.ForeignKey('Author', on_delete=models.CASCADE, verbose_name="Автор")
+    author_user = models.ForeignKey('Author', on_delete=models.CASCADE, verbose_name=_("Author"))
     post_type = models.CharField(max_length=2,
                                   choices=POST_TYPES,
                                   default=article,
-                                  verbose_name='Тип поста',
+                                  verbose_name=_('Type of post'),
                                  )
-    create_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания',)
-    category = models.ManyToManyField('Category', through='PostCategory', verbose_name='Категория')
-    header_post = models.CharField(max_length=128, verbose_name="Заголовок")
-    text_post = models.TextField(verbose_name="Текст")
-    rating_post = models.SmallIntegerField(default=0, verbose_name="Рэйтинг")
-    is_created = models.BooleanField(default=True, verbose_name="Редакция") # для обработки в signals.py - только создали или модифицируем
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name=_('Create date'),)
+    category = models.ManyToManyField('Category', through='PostCategory', verbose_name=_('Category'))
+    header_post = models.CharField(max_length=128, verbose_name=_('Title'))
+    text_post = models.TextField(verbose_name=_('Text'))
+    rating_post = models.SmallIntegerField(default=0, verbose_name=_('Rating'))
+    is_created = models.BooleanField(default=True, verbose_name=_('Created')) # Редакция для обработки в signals.py - только создали или модифицируем
 
     def like(self):
         self.rating_post += 1
@@ -170,12 +170,12 @@ class Post(models.Model):
         """метод возвращает список категорий, добавлен для отображения категорий в админке"""
         return "\n".join([c.name_category for c in self.category.all()])
 
-    get_cat.short_description = "Категории"
+    get_cat.short_description = _('Categories')
 
     # переопределяя этот класс мы получаем красивые названия классов в админ панели
     class Meta:
-        verbose_name = 'Публикация'
-        verbose_name_plural = 'Публикации'
+        verbose_name = _('Publication')
+        verbose_name_plural = _('Publications')
         # ordering = '-create_date'
 
 class PostCategory(models.Model):
@@ -184,16 +184,16 @@ class PostCategory(models.Model):
         - связь «один ко многим» с моделью Post;
         - связь «один ко многим» с моделью Category.
     """
-    throughPost = models.ForeignKey('Post', on_delete=models.CASCADE, verbose_name="Публикация")
-    throughCategory = models.ForeignKey('Category', on_delete=models.CASCADE, verbose_name="Категория")
+    throughPost = models.ForeignKey('Post', on_delete=models.CASCADE, verbose_name=_('Publication'))
+    throughCategory = models.ForeignKey('Category', on_delete=models.CASCADE, verbose_name=_('Category'))
 
     # def __str__(self):
     #     return f"{Category.objects.get(postcategory__throughCategory=self.throughCategory).values('name_category')}"
 
     # переопределяя этот класс мы получаем красивые названия классов в админ панели
     class Meta:
-        verbose_name = 'Связь Публикация-Категория'
-        verbose_name_plural = 'Связи Публикации-Категории'
+        verbose_name = _('Connection Publication - Category')
+        verbose_name_plural = _('Connections Publications - Categories')
 
 class Comment(models.Model):
     """
@@ -204,11 +204,11 @@ class Comment(models.Model):
         - дата и время создания комментария;
         - рейтинг комментария.
     """
-    post = models.ForeignKey('Post', on_delete=models.CASCADE, verbose_name='Публикация')
-    author_user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
-    text_comment = models.TextField(verbose_name="Комментарий")
-    create_datetime = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    rating_comment = models.SmallIntegerField(default=0, verbose_name='Рэйтинг')
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, verbose_name=_('Publication'))
+    author_user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Author'))
+    text_comment = models.TextField(verbose_name=_('Comment'))
+    create_datetime = models.DateTimeField(auto_now_add=True, verbose_name=_('Create date'))
+    rating_comment = models.SmallIntegerField(default=0, verbose_name=_('Rating'))
 
     def like(self):
         self.rating_comment += 1
@@ -219,5 +219,5 @@ class Comment(models.Model):
         self.save()
 
     class Meta:
-        verbose_name = 'Комментарий'
-        verbose_name_plural = 'Комментарии'
+        verbose_name = _('Comment')
+        verbose_name_plural = _('Comments')

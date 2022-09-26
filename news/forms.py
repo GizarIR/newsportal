@@ -7,6 +7,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
 from .models import Post
 
+from django.utils.translation import gettext as _
 
 class PostFormArticle(forms.ModelForm):
     header_post = forms.CharField(min_length=20)
@@ -30,7 +31,7 @@ class PostFormArticle(forms.ModelForm):
 
         if header_post == text_post:
             raise ValidationError(
-                'Заголовок статьи не должен полностью совпадать с текстом статьи.'
+                _('The title of the article should not completely coincide with the text of the article.') # Заголовок статьи не должен полностью совпадать с текстом статьи.
             )
 
         return cleaned_data
@@ -55,7 +56,7 @@ class PostFormNew(forms.ModelForm):
         text_post = self.cleaned_data['text_post']
         if len(text_post) > 256:
             raise ValidationError(
-                'Текст новости не может быть больше 256 символов.'
+                _('The text of the news can not be more than 256 characters.') # Текст новости не может быть больше 256 символов.
             )
         return text_post
 
@@ -66,7 +67,7 @@ class PostFormNew(forms.ModelForm):
 
         if header_post == text_post:
             raise ValidationError(
-                'Заголовок новости не должен полностью совпадать с текстом новости.'
+                _('The headline of the news should not completely coincide with the text of the news.') # Заголовок новости не должен полностью совпадать с текстом новости.
             )
 
         return cleaned_data

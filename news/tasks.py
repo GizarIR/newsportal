@@ -11,6 +11,7 @@ from django.template.loader import render_to_string # импортируем ф�
 # группа импорта моделей
 from .models import Post, Category, PostCategory
 
+from django.utils.translation import gettext as _
 
 @shared_task
 def send_mails_new_pub(post_pk, subject_email, subscriber, html_content):
@@ -24,7 +25,7 @@ def send_mails_new_pub(post_pk, subject_email, subscriber, html_content):
     )
     msg.attach_alternative(html_content, "text/html")
 
-    print(f'Отправка письма подписчику {subscriber[0]}...')
+    print(_(f'Sending a message to the subscriber {subscriber[0]}...')) #f'Отправка письма подписчику {subscriber[0]}...
 
     msg.send()
     return
@@ -32,18 +33,18 @@ def send_mails_new_pub(post_pk, subject_email, subscriber, html_content):
 @shared_task
 def send_news_week(cat, subscriber, html_content,):
     msg = EmailMultiAlternatives(
-        subject=f'Еженедельная рассылка новостей в твоей любимой категории: {cat}',
-        body=f'Еженедельная рассылка',
+        subject=_(f'Weekly newsletter in your favorite category: {cat}'), #f'Еженедельная рассылка новостей в твоей любимой категории: {cat}'
+        body=_(f'Weekly newsletter'), # Еженедельная рассылка
         from_email='gizarir@mail.ru',
         to=[subscriber[0], ],
     )
     msg.attach_alternative(html_content, "text/html")
 
-    print(f'Отправка письма подписчику {subscriber[0]} категории {cat}...')
+    print(_(f'Sending an email to the {subscriber[0]} of the {cat} category...')) # Отправка письма подписчику {subscriber[0]} категории {cat}...
     try:
         msg.send()
     except smtplib.SMTPRecipientsRefused:
-        print(f'Error: Ошибка отправки письма по адресу: {subscriber[0]}')
+        print(_(f'Error: Error sending an email to: {subscriber[0]}')) # Error: Ошибка отправки письма по адресу: {subscriber[0]}
     return
 
 @shared_task
@@ -55,7 +56,7 @@ def news_week():
             self.header = header
             self.text = text
 
-    print('Запуск еженедельной рассылки новостей')
+    print(_('Start a weekly newsletter')) # 'Запуск еженедельной рассылки новостей'
     # получим список категорий
     qs_cat_list = Category.objects.all()
     # для каждой категории создадим список рассылки, список публикаций и отправляем почту
@@ -72,7 +73,7 @@ def news_week():
                 'throughCategory__name_category',
             ).distinct()
         )
-        print(f'Список рассылки mailing_list: {mailing_list} для категории {cat.name_category}')
+        print(_(f'Mailing list mailing_list: {mailing_list} for the category {cat.name_category}')) # f'Список рассылки mailing_list: {mailing_list} для категории {cat.name_category}'
 
         # Вычисляем даты для прошедшей недели
         # d_from = datetime.now(tz=timezone.utc).date()
@@ -95,7 +96,7 @@ def news_week():
         posts_for_email = []
         for post in posts_list:
             posts_for_email.append(PostForEmail(post[0], post[1], post[2]))
-        print('Список постов для рассылки  подготовлен')
+        print(_('The list of posts for mailing has been prepared')) # 'Список постов для рассылки  подготовлен'
 
 
         # отправляем почту
@@ -126,4 +127,4 @@ def news_week():
                 # except smtplib.SMTPRecipientsRefused:
                 #     print(f'Ошибка отправки письма по адресу: {subscriber[0]}')
 
-    return print('Еженедельная рассылка завершена успешно.')
+    return print(_('Weekly newsletter completed successfully.')) # 'Еженедельная рассылка завершена успешно.'

@@ -1,4 +1,4 @@
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as _
 
 from django.contrib import admin
 from .models import Author, Post, Category, PostCategory, CategorySubscriber, Comment
@@ -7,7 +7,7 @@ from .models import Author, Post, Category, PostCategory, CategorySubscriber, Co
 def nullfy_rating(modeladmin, request, queryset):
     """Функция обнуления рэйтинга публикации"""
     queryset.update(rating_post=0)
-nullfy_rating.short_description = 'Обнуление рейтинга' # краткое описание указываем ВНЕ функции
+nullfy_rating.short_description = _('Zeroing the rating') # краткое описание указываем ВНЕ функции
 
 # class Admin(admin.ModelAdmin):
 #     list_display = ['', '', '', '', ]
@@ -33,13 +33,13 @@ class CategoryAdmin(admin.ModelAdmin):
 class RatingListFilter(admin.SimpleListFilter):
     """Данный класс описан для отображения рейтинга.
     Полное описание тут: https://docs.djangoproject.com/en/4.0/ref/contrib/admin/#django.contrib.admin.ModelAdmin"""
-    title = 'Категории рейтинга'
+    title = _('Category of rating')
     parameter_name = 'decade'
 
     def lookups(self, request, model_admin):
         return (
-            ('50s', 'до 50 баллов'),
-            ('100s', 'больше  сотни'),
+            ('50s', _('less than 50 points')),
+            ('100s',_('more than 100 points')),
         )
     def queryset(self, request, queryset):
         if self.value() == '50s':

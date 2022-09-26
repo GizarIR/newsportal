@@ -66,7 +66,7 @@ def index_test(request):
 # пример создания вьюшки через класс - исключительно в целях тестирования реализации
 class IndexTrans(View):
     def get(self, request):
-        string = _('Hello world!')
+        string = _("Test string")
         return HttpResponse(string)
 
 
@@ -148,14 +148,14 @@ def add_subscribe(request, **kwargs):
     pk_cat = kwargs.get('pk')
     # pk_cat = pk
     # print(f'Передается категория: {pk_cat}')
-    print('Пользователю', request.user, 'добавлена категория в подписку:', Category.objects.get(pk=pk_cat))
+    # print('Пользователю', request.user, 'добавлена категория в подписку:', Category.objects.get(pk=pk_cat))
     Category.objects.get(pk=pk_cat).subscribers.add(request.user)
     return redirect('home_news')
 
 @login_required
 def del_subscribe(request, **kwargs):
     pk_cat = kwargs.get('pk')
-    print('Пользователь', request.user, 'отписан от подписок на категорию:', Category.objects.get(pk=pk_cat))
+    # print('Пользователь', request.user, 'отписан от подписок на категорию:', Category.objects.get(pk=pk_cat))
     Category.objects.get(pk=pk_cat).subscribers.remove(request.user)
     return redirect('home_news')
 
@@ -200,8 +200,8 @@ class PostCreateNew(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         # print(posts)
         if len(posts) > LIMIT_POSTS:
             # raise ValidationError('Вы превысили ограничение на количество постов в день > 3!')
-            return HttpResponse("""<h3>Вы превысили лимит 3 публикации в день!</h3>
-            <p><a href="/posts/">Вернуться на портал</a></p>""")
+            return HttpResponse(_("""<h3>You have exceeded the limit of 3 publications per day!</h3>
+            <p><a href="/posts/">Return to the portal</a></p>"""))
         #
         # Код ниже - Вариант 1 Отправки уведомлений о новой новости подписчикам реализован при помощи сигналов, поэтому здесь
         # # отключен, но оставлен исключительно в обучающем ключе как вариант работающей реализации
@@ -255,8 +255,8 @@ class PostCreateArticle(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
         d_to = d_from + timedelta(days=1)
         posts = Post.objects.filter(author_user=author, create_date__range=(d_from, d_to))
         if len(posts) > LIMIT_POSTS:
-            return HttpResponse("""<h3>Вы превысили лимит 3 публикации в день!</h3>
-            <p><a href="/posts/">Вернуться на портал</a></p>""")
+            return HttpResponse(_("""<h3>You have exceeded the limit of 3 publications per day!</h3>
+            <p><a href="/posts/">Return to the portal</a></p>"""))
 
         return super().form_valid(form)
 
