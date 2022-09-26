@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from django.http import HttpResponse
 
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from django.urls import reverse_lazy
 
 
@@ -30,7 +30,6 @@ from django.contrib.auth.models import User
 from .filters import PostFilter
 from .forms import PostFormArticle, PostFormNew, ProfileUserForm
 
-
 # импорты для реализации исключения при проверке количества постов в день
 from django.core.exceptions import ValidationError
 
@@ -39,18 +38,20 @@ from django.core.cache import cache
 
 # включаем логирование
 # import logging
-# ниже  можно в качестве параметра подставлять все описанные loggers
-# если есть необходимость отлавливать сообщения из разных модулей
-# тогда можно в качестве параметра использовать __name__
-# но при этом в settings.py.LOGGING нужно описать иерархию логеров
-# и использовать propagate для исключения двойной обработки сообщений
+# ниже можно в качестве параметра подставлять все описанные loggers если есть необходимость отлавливать
+# сообщения из разных модулей тогда можно в качестве параметра использовать __name__ но при этом в settings.py.LOGGING
+# нужно описать иерархию логеров и использовать propagate для исключения двойной обработки сообщений
 # разными логерами находящимися в одной иерархии
 # logger = logging.getLogger('file_general')
 # logger = logging.getLogger('django')
+
+# Настройки включения перевода
+from django.utils.translation import gettext as _ # импортируем функцию перевода
+
 # ограничение на количество публикаций в день для автора
 LIMIT_POSTS = 20
 
-
+# пример создания вьюшки через функцию - исключительно в целях тестирования реализации
 def index_test(request):
     # отправим сообщение в файл лога
     # logger.debug("Hello! --------DEBUG--------Enjoy:)")
@@ -60,6 +61,14 @@ def index_test(request):
     # logger.critical("Hello! --------CRITICAL--------Enjoy:)")
     # # logger_django.error("Hello! --------DJANGO-ERROR--------Enjoy:)")
     return HttpResponse("<p> Сообщение для тестирования </p>")
+
+
+# пример создания вьюшки через класс - исключительно в целях тестирования реализации
+class IndexTrans(View):
+    def get(self, request):
+        string = _('Hello world!')
+        return HttpResponse(string)
+
 
 class PostsList(ListView):
     """Представление возвращает список публикаций """

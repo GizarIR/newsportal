@@ -2,7 +2,7 @@ from django.urls import path
 # Импортируем созданное нами представление
 from .views import (
     PostsList, PostDetail, PostsListSearch, PostCreateArticle, PostCreateNew, PostUpdateNew, PostUpdateArticle,
-    PostDelete, upgrade_me, add_subscribe, del_subscribe, index_test
+    PostDelete, upgrade_me, add_subscribe, del_subscribe, index_test, IndexTrans
 )
 
 # Отключено поскольку регистрацию и аутентификацию по заданию необходимо реализовать через библиотеку allauth
@@ -24,6 +24,7 @@ from django.views.decorators.cache import cache_page
 
 urlpatterns = [
     # path('test/', index_test, name='index_test'),
+    path('test/', IndexTrans.as_view(), name='index_test'),
     path('', cache_page (60 * 1) (PostsList.as_view()), name='home'),
     path('news/', cache_page (60 * 1) (PostsList.as_view()), name='home_news'),
     # path('<int:pk>', cache_page (60 * 5) (PostDetail.as_view()), name='post_detail'), # переключено на API cache

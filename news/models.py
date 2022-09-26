@@ -6,6 +6,11 @@ from django.urls import reverse
 # группа импортов для работы кэширования
 from django.core.cache import cache
 
+
+# группа импортов для работы переводов
+from django.utils.translation import gettext as _
+from django.utils.translation import pgettext_lazy # имопртируем ленивую функйию перевода
+
 # Create your models here.
 
 class Author(models.Model):
@@ -14,7 +19,11 @@ class Author(models.Model):
         - cвязь «один к одному», с встроенной моделью пользователей User;
         - рейтинг пользователя.
     """
-    author_user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Автор") #параметр on_delete м.б. SET_NULL
+    author_user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Автор",
+    ) #параметр on_delete м.б. SET_NULL
     rating_author = models.SmallIntegerField(default=0, verbose_name="Рэйтинг")
 
     def update_rating(self):
@@ -52,13 +61,13 @@ class Category(models.Model):
         max_length=64,
         unique=True,
         verbose_name='Категория',
-        help_text='Название категории - 64 символа',
+        help_text=_('Name of category - 64 characters'),
     )
     subscribers = models.ManyToManyField(
         User,
         through='CategorySubscriber',
         blank=True,
-        verbose_name="Подписчики"
+        verbose_name="Подписчики",
     )
 
     def get_subscribers(self):
@@ -90,7 +99,7 @@ class CategorySubscriber(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        verbose_name="Подписчик",
+        verbose_name=pgettext_lazy('Subscriber for article', 'Subscriber'),
     )
 
     class Meta:
