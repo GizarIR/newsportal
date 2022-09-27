@@ -8,7 +8,7 @@ from django.core.cache import cache
 
 
 # группа импортов для работы переводов
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy # имопртируем ленивую функйию перевода
 
 # Create your models here.

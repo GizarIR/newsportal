@@ -3,7 +3,7 @@ from django_filters import FilterSet
 from .models import Post, PostCategory, Category, Author
 import django.forms
 
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 
 class PostFilter(FilterSet):
     post__icontains = CharFilter(

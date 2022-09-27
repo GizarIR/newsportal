@@ -1,14 +1,17 @@
 <!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
+<!-- Подгружаем переводы-->
+{% load i18n %}
 
 <!-- подгрузим собственные фильтры из файла custom_filters.py-->
 {% load custom_filters %}
 
 {% load cache %}
-{% cache 60 title %}
+{% get_current_language as LANGUAGE_CODE %}
+{% cache 60 title LANGUAGE_CODE %}
     <!-- Название у нас будет Post -->
     {% block title %}
-    Публикация
+        {% translate "Publication"%}
     {% endblock title %}
 {% endcache %}
 
@@ -16,11 +19,11 @@
 {% block content %}
 
 {% if post.post_type == 'NW' %}
-    <p><h5 align="left">Новость: "{{ post.header_post|censor }}"</h5></p>
+    <p><h5 align="left">{% trans "News: " %}"{{ post.header_post|censor }}"</h5></p>
 {% else %}
-    <p><h5 align="left">Статья: "{{ post.header_post|censor }}"</h5></p>
+    <p><h5 align="left">{% trans "Article: " %}"{{ post.header_post|censor }}"</h5></p>
 
-<p align="left"> Категории:
+<p align="left"> {% trans "Category" %}
     {% for cat in post.category.all %}
         {{ cat }}
     {% endfor %}
@@ -36,14 +39,14 @@
 </table>
 
 {% if offer_subscribe %}
-    <p align="left"> Подписаться на новости:
+    <p align="left"> {% trans "Subscribe to the news:" %}
     {% for cat in cat_for_subscribe %}
         <a href="{% url 'add_subscribe' cat.id %}" >{{ cat.name_category }}</a>
     {% endfor %}
     </p>
 {% endif %}
 {% if offer_unsubscribe %}
-    <p align="left"> Отписаться от новостей:
+    <p align="left"> {% trans "Unsubscribe from the news:" %}
     {% for cat in cat_for_unsubscribe %}
         <a href="{% url 'del_subscribe' cat.id %}">{{ cat.name_category }}</a>
     {% endfor %}

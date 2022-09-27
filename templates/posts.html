@@ -1,6 +1,6 @@
 <!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
-
+{% load i18n %}
 {% load custom_filters %}
 
 {% load cache %}
@@ -12,22 +12,22 @@
 {% endcache %}
 <!-- В контенте на странице мы выводим все статьи и новости -->
 {% block content %}
-<h1>Публикации портала:</h1>
+<h1>{% trans 'Portal publications:'%}</h1>
 
 <p>
 {% if is_not_author %}
-   <button><a href="{% url 'profile_user_upgrade' %}"> Стать автором </a></button>
+   <button><a href="{% url 'profile_user_upgrade' %}">{% trans "Become an author" %}</a></button>
 {% endif %}
 </p>
 
 {% if posts %}
     <table border="3" cellspacing="10" cellpadding="5" frame="hsides">
-        <caption align="top"> <h4>Всего публикаций на странице: {{ posts|length }}</h4></caption>
+        <caption align="top"> <h4>{% trans "Total publications per page:" %}{{ posts|length }}</h4></caption>
         <tr>
-            <th>Заголовок</th>
-            <th>Дата</th>
-            <th>Категория</th>
-            <th>Описание</th>
+            <th>{% trans "Title" %}</th>
+            <th>{% trans "Date" %}</th>
+            <th>{% trans "Category" %}</th>
+            <th>{% trans "Description" %}</th>
         </tr>
         {% for post in posts %}
         <tr>
@@ -43,7 +43,7 @@
         {% endfor %}
     </table>
 {% else %}
-    <h3>А новостей на сегодня нет!</h3>
+    <h3>{% trans "And there is no news for today!" %}}</h3>
 {% endif %}
 
 {# Пагинация #}

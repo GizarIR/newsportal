@@ -1,12 +1,18 @@
 {% extends 'flatpages/default.html' %}
+ <!-- Подгружаем переводы-->
+{% load i18n %}
 
 {% block title %}
-{{ flatpage.title}}
+
+    {% trans flatpage.title %}
+
 {% endblock title %}
 
 {% block content %}
-    <h2> {{ flatpage.title}}</h2>
+    <h2> {% trans flatpage.title %} </h2>
     <hr>
-    <h3>Телефоны и адреса:</h3>
-{{ flatpage.content}}
+    <h3>{% trans "Phone and address" %}</h3>
+
+    {% trans flatpage.content %}
+
 {% endblock content %}

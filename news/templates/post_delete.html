@@ -1,19 +1,22 @@
 {% extends 'flatpages/default.html' %}
+ <!-- Подгружаем переводы-->
+{% load i18n %}
+
 {% load custom_filters %}
 
 {% block content %}
-<h1>Удаление публикации</h1>
+<h1>{% trans "Delete publication" %}</h1>
 <hr>
 <form action="" method="post">
     {% csrf_token %}
-    <p>Удаляем
+    <p>{% trans "You are deleting " %}
         <!-- ниже в строчке важно что AR в одинарных кавычках-->
         {% if object.post_type == 'AR' %}
-            статью : "{{ object.header_post }}" ?
+        {% trans "article" %} : "{{ object.header_post }}" ?
         {% else %}
-            новость : "{{ object.header_post }}" ?
+        {%  trans "news" %} : "{{ object.header_post }}" ?
         {% endif %}
     </p>
-    <input type="submit" value="Удалить" />
+    <input type="submit" value="{% trans "Delete" %}" />
 </form>
 {% endblock content %}

@@ -1,19 +1,20 @@
 {% extends 'flatpages/default.html' %}
-
+<!-- Подгружаем переводы-->
+{% load i18n %}
 {% block content %}
-<h1>Редактирование профиля</h1>
+<h1>{% trans "Edit profile" %}</h1>
 <hr>
 
 {% if request.user.id != profile.id %}
-    <h3 style="color: red">У Вас нет прав доступа к данной информации</h3>
+    <h3 style="color: red">{% trans "You do not have access rights to this information!" %}</h3>
 {% elif request.user.id == profile.id %}
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Сохранить" />
+    <input type="submit" value="{% trans "Save" %}" />
 </form>
 <hr>
-<h5>Информация о подписках</h5>
+<h5>{% trans "Subscription Information" %}</h5>
 <p>
     {% for cat in subscribes %}
         {{ cat.name_category }}
