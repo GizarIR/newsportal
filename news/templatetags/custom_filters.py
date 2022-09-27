@@ -1,6 +1,8 @@
 from django import template
 import string
 
+from django.utils.translation import gettext as  _
+
 
 CENSOR_LIST = ['редиска', 'гад', 'дурак', 'урод', 'пиzдит']
 
@@ -12,7 +14,7 @@ register = template.Library()
 @register.filter()
 def censor(value):
     if not isinstance(value, str):
-        raise TypeError("Цензура осуществляется только для объекта типа строка (str)")
+        raise TypeError(_("Censorship is carried out only for an object of type string (str)")) # Цензура осуществляется только для объекта типа строка (str)
     else:
         list_ = value.split(" ")
         for i in range(len(list_)):

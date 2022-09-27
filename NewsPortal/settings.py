@@ -166,6 +166,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'ru' # переключено на русский язык при внедрении перевода
 
+LANGUAGES = [
+    ('en-us' , 'English'),
+    ('ru','Русский'),
+]
+
 
 TIME_ZONE = 'Europe/Moscow' #по умолчанию было UTC
 

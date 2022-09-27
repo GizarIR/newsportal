@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-26 20:37+0300\n"
+"POT-Creation-Date: 2022-09-27 11:16+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,7 +59,8 @@ msgstr "Позже даты"
 
 #: news/forms.py:34
 msgid ""
-"The title of the article should not completely coincide with the text of the article."
+"The title of the article should not completely coincide with the text of the "
+"article."
 msgstr "Заголовок статьи не может совпадать с текстом."
 
 #: news/forms.py:59
@@ -68,7 +69,8 @@ msgstr "Текст новости не может быть больше 265 си
 
 #: news/forms.py:70
 msgid ""
-"The headline of the news should not completely coincide with the text of the news."
+"The headline of the news should not completely coincide with the text of the "
+"news."
 msgstr "Заголовок новости не может совпадать с текстом."
 
 #: news/models.py:64
@@ -157,9 +159,13 @@ msgid "Changes in the publication {post.header_post} in your favorite category"
 msgstr "Изменения в публикации {post.header_post} в вашей любимой категории"
 
 #: news/signals.py:49
-#, python-brace-format
+#, fuzzy, python-brace-format
+#| msgid ""
+#| "The list for sending mailing_list emails has been prepared for Celery:"
+#| "{mailing_list}"
 msgid ""
-"The list for sending mailing_list emails has been prepared for Celery:{mailing_list}"
+"The list for sending mailing_list emails has been prepared for Celery: "
+"{mailing_list}"
 msgstr "Список рассылки mailing_list подготовлен для  Celery: {mailing_list}"
 
 #: news/tasks.py:28
@@ -193,8 +199,11 @@ msgstr "Запуск еженедельной рассылки новостей"
 #: news/tasks.py:76
 #, python-brace-format
 msgid ""
-"Mailing list mailing_list: {mailing_list} for the category {cat.name_category}"
-msgstr "Список рассылки mailing_list: {mailing_list} для категории {cat.name_category}"
+"Mailing list mailing_list: {mailing_list} for the category {cat."
+"name_category}"
+msgstr ""
+"Список рассылки mailing_list: {mailing_list} для категории {cat."
+"name_category}"
 
 #: news/tasks.py:99
 msgid "The list of posts for mailing has been prepared"
@@ -203,6 +212,10 @@ msgstr "Список постов для рассылки  подготовле�
 #: news/tasks.py:130
 msgid "Weekly newsletter completed successfully."
 msgstr "Еженедельная рассылка завершена успешно."
+
+#: news/templatetags/custom_filters.py:17
+msgid "Censorship is carried out only for an object of type string (str)"
+msgstr "Цензура осуществляется только для объекта типа строка (str)"
 
 #: news/views.py:69
 msgid "Test string"
