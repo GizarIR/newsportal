@@ -19,7 +19,6 @@ from pathlib import Path
 # 2. добавляем его в .gitignore
 # 3. import os
 # 4. в settings.py PSWD=os.getenv("PASSWORD") , константа становиться доступной для использования
-
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
@@ -32,6 +31,9 @@ ADMIN_EMAIL_SERVER = os.environ.get("ADMIN_EMAIL_SERVER")
 MY_EMAIL_HOST = os.environ.get("MY_EMAIL_HOST")
 MY_EMAIL_HOST_USER = os.environ.get("MY_EMAIL_HOST_USER")
 
+
+# импорт переводов
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

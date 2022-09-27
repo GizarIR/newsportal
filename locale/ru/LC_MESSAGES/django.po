@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 11:16+0300\n"
+"POT-Creation-Date: 2022-09-27 12:24+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -228,6 +228,46 @@ msgid ""
 msgstr ""
 "<h3>Вы превысили лимит 3 публикации в день!</h3>\n"
 "            <p><a href=\"/posts/\">Вернуться на портал</a></p>"
+
+#: templates/flatpages/default.html:34
+msgid "Main"
+msgstr "Главная"
+
+#: templates/flatpages/default.html:38
+msgid "About"
+msgstr "О нас"
+
+#: templates/flatpages/default.html:41
+msgid "Contacts"
+msgstr "Контакты"
+
+#: templates/flatpages/default.html:44
+msgid "Create news"
+msgstr "Создать новость"
+
+#: templates/flatpages/default.html:47
+msgid "Create article"
+msgstr "Создать статью"
+
+#: templates/flatpages/default.html:50
+msgid "Search"
+msgstr "Поиск"
+
+#: templates/flatpages/default.html:54
+msgid "Profile"
+msgstr "Профиль"
+
+#: templates/flatpages/default.html:59
+msgid "Sign out"
+msgstr "Выйти"
+
+#: templates/flatpages/default.html:61
+msgid "Sign in"
+msgstr "Войти"
+
+#: templates/flatpages/default.html:77
+msgid "Set"
+msgstr "Выбрать"
 
 #~ msgid "Hello world!"
 #~ msgstr "Привет мир!"
