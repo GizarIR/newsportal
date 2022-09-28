@@ -56,6 +56,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation', # обязательно вписываем его перед админом
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -86,7 +88,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 
-    'django.middleware.locale.LocaleMiddleware', # добавлен для включения функции перевода
+    'django.middleware.locale.LocaleMiddleware', # добавлен для включения функции перевода, порядок важен
 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -172,6 +174,10 @@ LANGUAGES = [
     ('en-us' , 'English'),
     ('ru','Русский'),
 ]
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
+# MODELTRANSLATION_LANGUAGES = ('en-us', 'ru')
+# MODELTRANSLATION_FALLBACK_LANGUAGES = ('ru',)
 
 
 TIME_ZONE = 'Europe/Moscow' #по умолчанию было UTC

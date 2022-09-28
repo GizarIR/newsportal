@@ -6,14 +6,11 @@
 <!-- подгрузим собственные фильтры из файла custom_filters.py-->
 {% load custom_filters %}
 
-{% load cache %}
-{% get_current_language as LANGUAGE_CODE %}
-{% cache 60 title LANGUAGE_CODE %}
-    <!-- Название у нас будет Post -->
+<!-- load cache %} -->
     {% block title %}
         {% translate "Publication"%}
     {% endblock title %}
-{% endcache %}
+<!-- endcache %} -->
 
 <!-- В контенте на странице мы выводим статью -->
 {% block content %}

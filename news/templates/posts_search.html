@@ -12,7 +12,7 @@
 <h1>{% trans "Search for publications on the portal" %}</h1>
 <form action="" method="get">
     {{ filterset.form.as_p }}
-    <input type="submit" value="Найти" />
+    <input type="submit" value="{% trans "Find" %}" />
 </form>
 
 <a href="?{% url 'posts_list_search' %}">{% trans "Clear" %}</a>

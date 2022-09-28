@@ -51,7 +51,7 @@ class Author(models.Model):
         verbose_name = 'Автор'
         verbose_name_plural = 'Авторы'
 
-
+from modeltranslation.manager import MultilingualManager, TranslationField
 class Category(models.Model):
     """
     Модель Category - темы, которые они отражают (спорт, политика, образование и т. д.), поля:
@@ -70,8 +70,10 @@ class Category(models.Model):
         verbose_name=_("Subscribers"),
     )
 
+    # objects = MultilingualManager()
+
     def get_subscribers(self):
-        """метод возвращает список подписчиков, добавлен для отображения категорий в админке"""
+        """Метод возвращает список подписчиков, добавлен для отображения категорий в админке"""
         return " ".join([s.username for s in self.subscribers.all()])
 
     get_subscribers.short_description = _("Subscribers")
@@ -137,6 +139,8 @@ class Post(models.Model):
     text_post = models.TextField(verbose_name=_('Text'))
     rating_post = models.SmallIntegerField(default=0, verbose_name=_('Rating'))
     is_created = models.BooleanField(default=True, verbose_name=_('Created')) # Редакция для обработки в signals.py - только создали или модифицируем
+
+    # i18n = TranslationField(translated_field={})
 
     def like(self):
         self.rating_post += 1

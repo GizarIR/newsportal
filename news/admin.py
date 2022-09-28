@@ -2,6 +2,9 @@ from django.utils.translation import gettext as _
 
 from django.contrib import admin
 from .models import Author, Post, Category, PostCategory, CategorySubscriber, Comment
+# импортируем модель амдинки (вспоминаем модуль про переопределение стандартных админ-инструментов)
+from modeltranslation.admin import TranslationAdmin
+
 
 # Register your models here.
 def nullfy_rating(modeladmin, request, queryset):
@@ -28,6 +31,9 @@ class CategoryAdmin(admin.ModelAdmin):
     ]
     # list_filter = ['name_category', 'subscribers',]
     # search_fields = ['name_category', 'subscribers',]
+
+class CategoryAdminTranslation(CategoryAdmin, TranslationAdmin):
+    model = Category
 
 
 class RatingListFilter(admin.SimpleListFilter):
@@ -66,6 +72,8 @@ class PostAdmin(admin.ModelAdmin):
     list_per_page = 10
 
 
+class PostAdminTranslation(PostAdmin, TranslationAdmin):
+    model = Post
 
 class CommentAdmin(admin.ModelAdmin):
     # простой перечень полей (при помощи for) - работает если нет полей типа ManyToMany
@@ -84,9 +92,10 @@ class CategorySubscriberAdmin(admin.ModelAdmin):
     search_fields = ['throughSubscriber', 'throughCategory']
 
 
+
 admin.site.register(Author, AuthorAdmin)
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Post, PostAdmin)
+admin.site.register(Category, CategoryAdminTranslation)
+admin.site.register(Post, PostAdminTranslation)
 admin.site.register(PostCategory, PostCategoryAdmin)
 admin.site.register(CategorySubscriber, CategorySubscriberAdmin)
 # admin.site.unregister(CategorySubscriber) # модели можно разрегистрировать

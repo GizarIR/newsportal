@@ -28,7 +28,6 @@ from django.utils.translation import gettext as _
 def notify_subscribers(sender, instance, **kwargs):
     """Уведомление подписчиков о выходе новой публикации в категории"""
     post = Post.objects.get(pk=instance.pk)
-
     if post.is_created:
         subject_email=_(f'A new post in your favorite category') # Новая публикация в вашей любимой категории
     else:

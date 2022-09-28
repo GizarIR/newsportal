@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-27 17:05+0300\n"
+"POT-Creation-Date: 2022-09-27 21:39+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,19 +24,19 @@ msgstr ""
 msgid "Advanced options"
 msgstr "Дополнительные опции"
 
-#: news/admin.py:10
+#: news/admin.py:13
 msgid "Zeroing the rating"
 msgstr "Обнуление рэйтинга"
 
-#: news/admin.py:36
+#: news/admin.py:42
 msgid "Category of rating"
 msgstr "Категории рейтинга"
 
-#: news/admin.py:41
+#: news/admin.py:47
 msgid "less than 50 points"
 msgstr "Меньше 50 баллов"
 
-#: news/admin.py:42
+#: news/admin.py:48
 msgid "more than 100 points"
 msgstr "Больше 100 баллов"
 
@@ -272,6 +272,10 @@ msgstr "Поиск публикаций"
 msgid "Search for publications on the portal"
 msgstr "Поиск публикаций на портале"
 
+#: news/templates/posts_search.html:15
+msgid "Find"
+msgstr "Найти"
+
 #: news/templates/posts_search.html:18
 msgid "Clear"
 msgstr "Очистить"
@@ -344,6 +348,13 @@ msgstr "проект"
 msgid "Main"
 msgstr "Главная"
 
+#: templates/flatpages/default.html:39
+msgid "About"
+msgstr "О нас"
+
+#: templates/flatpages/default.html:42
+msgid "Contacts"
+msgstr "Контакты"
 
 #: templates/flatpages/default.html:45
 msgid "Create news"
@@ -409,20 +420,11 @@ msgstr "Описание"
 msgid "And there is no news for today!"
 msgstr "А новостей на сегодня нет!"
 
-
-msgid "Contacts"
-msgstr "Контакты"
-
 msgid "79173568498 - support, 80086577657 - CIO"
 msgstr "79173568498 - поддержка, 80086577657 - ГД"
 
-msgid "About"
-msgstr "О нас"
-
 msgid "News Portal News Portal - the latest news only from us!"
 msgstr "Новостной портал News Portal - самые свежие новости только у нас!"
-
-
 
 #~ msgid "Hello world!"
 #~ msgstr "Привет мир!"

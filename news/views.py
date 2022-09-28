@@ -29,6 +29,7 @@ from .models import Post, Author, CategorySubscriber, Category, PostCategory
 from django.contrib.auth.models import User
 from .filters import PostFilter
 from .forms import PostFormArticle, PostFormNew, ProfileUserForm
+from django.db.models import Q
 
 # импорты для реализации исключения при проверке количества постов в день
 from django.core.exceptions import ValidationError
@@ -127,18 +128,30 @@ class PostDetail(DetailView):
         id_post = self.kwargs.get('pk')
         # получаем в виде QuerySet список категорий на которые пользователь подписан
         # (их перечень можно посмотреть в профиле на портале)
-        cat_user = Category.objects.filter(subscribers__username=self.request.user).values('name_category')
-        # получаем в виде QuerySet список категорий для предложения подписки, т.е. те категории на которые пользователь
+        # строчка ниже отключена из-за включения перевода за ненадобностью
+        # cat_user = Category.objects.filter(subscribers__username=self.request.user).values('name_category')
+
+        # Получаем в виде QuerySet список категорий для предложения подписки, т.е. те категории на которые пользователь
         # не пописан, но они есть в списке категорий поста
-        qs_subscride = Post.objects.get(pk=id_post).category.exclude(name_category__in=cat_user)
-        # получаем в виде QuerySet список категорий для предложения отписки, т.е. те категории на которые пользователь
+        # qs_subscribe = Post.objects.filter(pk=id_post)[0].category.exclude(name_category__in=cat_user)
+        # строчка выше перестала работать т.к. простой QuerySet на мультиязычный
+        # а для данного типа запрос работал только для языка по умолчанию
+        # пришлось переделать на строчку ниже
+        qs_subscribe = Category.objects.filter(Q(post__pk=id_post) & ~Q(subscribers__username=self.request.user))
+
+        # Получаем в виде QuerySet список категорий для предложения отписки, т.е. те категории на которые пользователь
         # подписан и они есть в списке категорий поста
-        qs_unsubscribe = Post.objects.get(pk=id_post).category.filter(name_category__in=cat_user)
+        # qs_unsubscribe = Post.objects.filter(pk=id_post).category.filter(name_category__in=cat_user)
+        # строчка выше перестала работать т.к. простой QuerySet на мультиязычный
+        # а для данного типа запрос работал только для языка по умолчанию
+        # пришлось переделать на строчку ниже (для тестирования удобно использовать новость 131 b 132)
+        qs_unsubscribe = Category.objects.filter(Q(post__pk=id_post) & Q(subscribers__username=self.request.user))
+
         # передаем списки в контекст для отображения в шаблоне, id нужен для передачи в функции add/del_subscribe
-        context['cat_for_subscribe'] = qs_subscride.values('id','name_category')
+        context['cat_for_subscribe'] = qs_subscribe.values('id','name_category')
         context['cat_for_unsubscribe'] = qs_unsubscribe.values('id','name_category')
         # для правильной отрисовки шаблона передаем в контекст информацию о том пустые ли списки
-        context['offer_subscribe'] = qs_subscride.exists()
+        context['offer_subscribe'] = qs_subscribe.exists()
         context['offer_unsubscribe'] = qs_unsubscribe.exists()
         return context
 
