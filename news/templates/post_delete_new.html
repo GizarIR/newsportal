@@ -7,7 +7,7 @@
 {% block content %}
 <h1>{% trans "Delete news" %}</h1>
 <hr>
-<form action="" method="post">
+<form action="" method="delete">
     {% csrf_token %}
     <p>{% trans "You are deleting news: " %}{{ object.name }} ?</p>
     <input type="submit" value="{% trans "Delete" %}" />

@@ -2,6 +2,7 @@
 import time
 import datetime
 from datetime import datetime, timedelta, timezone
+from django.utils import timezone as djangotz
 from django.http import HttpResponse
 
 from django.shortcuts import render
@@ -49,10 +50,12 @@ from django.core.cache import cache
 # Настройки включения перевода
 from django.utils.translation import gettext as _ # импортируем функцию перевода
 
+import pytz #  импортируем стандартный модуль для работы с часовыми поясами
+
 # ограничение на количество публикаций в день для автора
 LIMIT_POSTS = 20
 
-# пример создания вьюшки через функцию - исключительно в целях тестирования реализации
+# пример создания вьюшки через функцию - исключительно в целях тестирования реализации логирования
 def index_test(request):
     # отправим сообщение в файл лога
     # logger.debug("Hello! --------DEBUG--------Enjoy:)")
@@ -63,17 +66,45 @@ def index_test(request):
     # # logger_django.error("Hello! --------DJANGO-ERROR--------Enjoy:)")
     return HttpResponse("<p> Сообщение для тестирования </p>")
 
-
-# пример создания вьюшки через класс - исключительно в целях тестирования реализации
+# пример создания вьюшки через класс - исключительно в целях тестирования реализации перевода
 class IndexTrans(View):
     def get(self, request):
         string = _("Test string")
         return HttpResponse(string)
 
+# Пример реализации вьюшки через класс  для обучения настройки изменения таймзоны
+class IndexTimezone(View):
+    def get(self, request):
+        current_time = djangotz.now()
+        context = {
+            'current_time': djangotz.now(),
+            'timezones': pytz.common_timezones #  добавляем в контекст все доступные часовые пояса
+        }
+        return HttpResponse(render(request, 'flatpages/default.html', context))
 
-class PostsList(ListView):
+    #  по пост-запросу будем добавлять в сессию часовой пояс, который и будет обрабатываться написанным нами ранее middleware
+    def post(self, request):
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect('index_test')
+
+class DataMixin:
+    """Класс создан для оптимизации кода, будет хранить переменные и методы общие
+    для многих представлений"""
+    paginate_by = 5
+
+    def get_user_context(self, **kwargs):
+        context = kwargs
+        context = {
+            'current_time': djangotz.now(),
+            'timezones': pytz.common_timezones  # добавляем в контекст все доступные часовые пояса
+        }
+        return context
+
+
+
+
+class PostsList(DataMixin, ListView):
     """Представление возвращает список публикаций """
-
     # Указываем модель, объекты которой мы будем выводить
     # строчка ниже эквивалент queryset = Post.objects.all(), те если нужно можно использовать фильтры
     model = Post
@@ -85,7 +116,7 @@ class PostsList(ListView):
     # Это имя списка, в котором будут лежать все объекты.
     # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
     context_object_name = 'posts'
-    paginate_by = 10
+    # paginate_by = 5 # Перенесено в класс миксин
 
     # В шаблон передаем дополнительную информацию о том является ли пользователем участником группы author
     def get_context_data(self, **kwargs):
@@ -94,13 +125,17 @@ class PostsList(ListView):
         в группу authors. Далее можно использовать данную переменную в любом шаблоне, например, posts.html """
         context = super().get_context_data(**kwargs)
         context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
-        # context['bg_color_mode'] = 3
-        # pprint(context)
+        user_context = self.get_user_context()  # общий для многих контент из миксина
+        context = dict(list(context.items())+ list(user_context.items()))
         return context
 
-class PostDetail(DetailView):
-    """Представление возвращает страницу с описанием публикации"""
+    def post(self, request):
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect('home')
 
+
+class PostDetail(DataMixin, DetailView):
+    """Представление возвращает страницу с описанием публикации"""
     # Модель всё та же, но мы хотим получать информацию по отдельной статье
     model = Post
     # Используем другой шаблон — post.html
@@ -138,7 +173,6 @@ class PostDetail(DetailView):
         # а для данного типа запрос работал только для языка по умолчанию
         # пришлось переделать на строчку ниже
         qs_subscribe = Category.objects.filter(Q(post__pk=id_post) & ~Q(subscribers__username=self.request.user))
-
         # Получаем в виде QuerySet список категорий для предложения отписки, т.е. те категории на которые пользователь
         # подписан и они есть в списке категорий поста
         # qs_unsubscribe = Post.objects.filter(pk=id_post).category.filter(name_category__in=cat_user)
@@ -146,15 +180,20 @@ class PostDetail(DetailView):
         # а для данного типа запрос работал только для языка по умолчанию
         # пришлось переделать на строчку ниже (для тестирования удобно использовать новость 131 b 132)
         qs_unsubscribe = Category.objects.filter(Q(post__pk=id_post) & Q(subscribers__username=self.request.user))
-
         # передаем списки в контекст для отображения в шаблоне, id нужен для передачи в функции add/del_subscribe
         context['cat_for_subscribe'] = qs_subscribe.values('id','name_category')
         context['cat_for_unsubscribe'] = qs_unsubscribe.values('id','name_category')
         # для правильной отрисовки шаблона передаем в контекст информацию о том пустые ли списки
         context['offer_subscribe'] = qs_subscribe.exists()
         context['offer_unsubscribe'] = qs_unsubscribe.exists()
+        user_context = self.get_user_context()
+        context = dict(list(context.items()) + list(user_context.items()))
+
         return context
 
+    def post(self, request, pk):
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect('post_detail', pk)
 
 @login_required
 def add_subscribe(request, **kwargs):
@@ -173,13 +212,13 @@ def del_subscribe(request, **kwargs):
     return redirect('home_news')
 
 
-class PostsListSearch(LoginRequiredMixin, ListView):
+class PostsListSearch(DataMixin, LoginRequiredMixin, ListView):
     """Представление возвращает форму поиска со списком публикаций - результатом поиска"""
     model = Post
     ordering = '-create_date'
     template_name = 'posts_search.html'
     context_object_name = 'finded_posts'
-    paginate_by = 5
+    # paginate_by = 5 # Перенесено в класс миксин
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -189,10 +228,17 @@ class PostsListSearch(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['filterset'] = self.filterset
+        user_context = self.get_user_context()
+        context = dict(list(context.items()) + list(user_context.items()))
+
         return context
 
+    def post(self, request):
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect('posts_list_search')
 
-class PostCreateNew(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+
+class PostCreateNew(LoginRequiredMixin, PermissionRequiredMixin, DataMixin, CreateView):
     """Представление возвращает форму создания новой новости"""
     permission_required = ('news.add_post')
     form_class = PostFormNew
@@ -206,11 +252,9 @@ class PostCreateNew(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         # Ограничение на создание не более 3-х публикаций в день
         author = post.author_user
         d_from = datetime.now(tz=timezone.utc).date()
-        # print(d_from)
         d_to = d_from + timedelta(days=1)
-        # print(d_to)
         posts = Post.objects.filter(author_user=author, create_date__range=(d_from, d_to))
-        # print(posts)
+
         if len(posts) > LIMIT_POSTS:
             # raise ValidationError('Вы превысили ограничение на количество постов в день > 3!')
             return HttpResponse(_("""<h3>You have exceeded the limit of 3 publications per day!</h3>
@@ -248,9 +292,21 @@ class PostCreateNew(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         # msg.send()
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        user_context = self.get_user_context()
+        context = dict(list(context.items()) + list(user_context.items()))
+        return context
 
+    def post(self, request, *args, **kwargs):
+        response = super().post(self, request, *args, **kwargs)
+        if 'timezone' in request.POST:
+            request.session['django_timezone'] = request.POST['timezone']
+            return redirect('post_create_new')
+        else:
+            return response
 
-class PostCreateArticle(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class PostCreateArticle(LoginRequiredMixin, PermissionRequiredMixin, DataMixin, CreateView):
     """Представление возвращает форму создания новой статьи"""
     permission_required = ('news.add_post')
     form_class = PostFormArticle
@@ -273,7 +329,21 @@ class PostCreateArticle(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
 
         return super().form_valid(form)
 
-class PostUpdateNew(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        user_context = self.get_user_context()
+        context = dict(list(context.items()) + list(user_context.items()))
+        return context
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(self, request, *args, **kwargs)
+        if 'timezone' in request.POST:
+            request.session['django_timezone'] = request.POST['timezone']
+            return redirect('post_create_article')
+        else:
+            return response
+
+class PostUpdateNew(LoginRequiredMixin, PermissionRequiredMixin, DataMixin, UpdateView):
     """Представление возвращает форму редактирования новости"""
     permission_required = ('news.change_post')
     form_class = PostFormNew
@@ -286,8 +356,20 @@ class PostUpdateNew(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         post.is_created = False
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        user_context = self.get_user_context() # из миксина
+        context = dict(list(context.items()) + list(user_context.items()))
+        return context
 
-class PostUpdateArticle(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    def post(self, request, *args, **kwargs):
+        response = super().post(self, request, *args, **kwargs)
+        if 'timezone' in request.POST:
+            request.session['django_timezone'] = request.POST['timezone']
+            return redirect('post_update_new', kwargs.get('pk'))
+        else:
+            return response
+class PostUpdateArticle(LoginRequiredMixin, PermissionRequiredMixin, DataMixin, UpdateView):
     """Представление возвращает форму редактирования статьи"""
     permission_required = ('news.change_post')
     form_class = PostFormArticle
@@ -300,6 +382,20 @@ class PostUpdateArticle(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
         post.is_created = False
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        user_context = self.get_user_context() # из миксина
+        context = dict(list(context.items()) + list(user_context.items()))
+        return context
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(self, request, *args, **kwargs)
+        if 'timezone' in request.POST:
+            request.session['django_timezone'] = request.POST['timezone']
+            return redirect('post_update_article', kwargs.get('pk'))
+        else:
+            return response
+
 class PostDelete(LoginRequiredMixin, DeleteView):
     """Представление возвращает форму удаления публикации"""
     model = Post
@@ -307,7 +403,7 @@ class PostDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('posts_list_search')
 
 
-class ProfileUserUpdate(LoginRequiredMixin, UpdateView):
+class ProfileUserUpdate(LoginRequiredMixin, DataMixin, UpdateView):
     """Редактирование профиля пользователя"""
     form_class = ProfileUserForm
     model = User
@@ -319,7 +415,19 @@ class ProfileUserUpdate(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         # print(self.request.user.pk)
         context['subscribes']=Category.objects.filter(subscribers__username=self.request.user).values('name_category')
+        user_context = self.get_user_context() # из миксина
+        context = dict(list(context.items()) + list(user_context.items()))
         return context
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(self, request, *args, **kwargs)
+        if 'timezone' in request.POST:
+            request.session['django_timezone'] = request.POST['timezone']
+            return redirect('profile_user_update', kwargs.get('pk'))
+        else:
+            return response
+
+
 
 @login_required
 def upgrade_me(request):

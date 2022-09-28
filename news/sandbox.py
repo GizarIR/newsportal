@@ -47,3 +47,17 @@ class MobileOrFullMiddleware:
 if __name__ == "__main__":
     print(hide_forbidden('Вася редиска пошел дурак на гору и там пиппит'))
     print(string.punctuation)
+
+    context_pre ={
+        'key1':'val1',
+        'key2': 'val2',
+    }
+
+    context_after ={
+        'key3':'val3',
+        'key4':'val4',
+    }
+
+    print(context_pre.items())
+    print(dict(list(context_pre.items())))
+    print(dict(list(context_pre.items()) + list(context_after.items())))

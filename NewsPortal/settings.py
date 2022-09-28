@@ -97,6 +97,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # подключаем еще один middle
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    # подключаем созданный по инструкции мидлваре для локализации времени
+    'news.middlewares.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'NewsPortal.urls'
@@ -184,8 +186,7 @@ TIME_ZONE = 'Europe/Moscow' #по умолчанию было UTC
 
 USE_I18N = True
 
-USE_TZ = False #Использовать timezone. Отключили так как в БД пишется без TZ а при вызове datetime.now() возвращаеся с TZ
-# в результате при поиске разницы выдавалась ошибка
+USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/

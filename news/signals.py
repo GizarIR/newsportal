@@ -12,10 +12,10 @@ from django.contrib.auth.models import User
 
 # импорт задач celery
 #  Также необходимо установить Celery, Redis и запустить 4 терминала
-# 1 - общий для запуска сервера Redis
+# 1 - общий для запуска сервера Redis cmd redis-server
 # 2 - терминал окружения проекта: python3 manage.py runserver
 # 3 - терминал окружения проекта для запуска задач без расписания: celery -A NewsPortal worker -l INFO --concurrency=10
-#  где --concurrency - количество процессов, которые могут на нём запускаться
+#  где --concurrency - количество процессов, которые могут на нём запускаться (d папке где manage.py)
 # 4 - (опционально) терминал окружения проекта для запуска задач с расписанием: celery -A NewsPortal beat -l INFO
 # где beat м.б. заменен на флаг -B после INFO
 from .tasks import send_mails_new_pub
