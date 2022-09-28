@@ -121,6 +121,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # для работы allauth
                 'django.template.context_processors.request',
+                # для переменных который нужны во многих шаблонах
+                'news.context_processors.extra_context',
             ],
         },
     },
@@ -182,7 +184,10 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 # MODELTRANSLATION_FALLBACK_LANGUAGES = ('ru',)
 
 
-TIME_ZONE = 'Europe/Moscow' #по умолчанию было UTC
+# TIME_ZONE = 'Europe/Moscow' #по умолчанию было UTC
+
+TIME_ZONE = 'UTC' #по умолчанию было UTC
+
 
 USE_I18N = True
 

@@ -16,6 +16,10 @@
         {% load custom_filters %}
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+        <!-- Если сейчас больше чем 19 или же меньше 7, то выводим тёмную тему, иначе выводим светлую -->
+        <style>
+            body {background-color: {% if current_time.hour >= 19 or current_time.hour <= 7 %} darkcyan {% else %} white {% endif %};}
+        </style>
     </head>
     <body>
 
@@ -87,8 +91,6 @@
         </nav>
         <!-- endcache %} конец кэшируемой части страницы-отключено -->
 
-
-
         <!-- Page content-->
         <div class="container">
            <div class="row">
@@ -99,5 +101,6 @@
                </div>
            </div>
         </div>
+
     </body>
 </html>

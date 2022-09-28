@@ -1,8 +1,5 @@
 # импорты django
-import time
-import datetime
-from datetime import datetime, timedelta, timezone
-from django.utils import timezone as djangotz
+
 from django.http import HttpResponse
 
 from django.shortcuts import render
@@ -51,6 +48,11 @@ from django.core.cache import cache
 from django.utils.translation import gettext as _ # импортируем функцию перевода
 
 import pytz #  импортируем стандартный модуль для работы с часовыми поясами
+import datetime
+from datetime import datetime, timedelta
+from django.utils import timezone
+
+from django.conf import settings
 
 # ограничение на количество публикаций в день для автора
 LIMIT_POSTS = 20
@@ -75,12 +77,15 @@ class IndexTrans(View):
 # Пример реализации вьюшки через класс  для обучения настройки изменения таймзоны
 class IndexTimezone(View):
     def get(self, request):
-        current_time = djangotz.now()
-        context = {
-            'current_time': djangotz.now(),
-            'timezones': pytz.common_timezones #  добавляем в контекст все доступные часовые пояса
-        }
-        return HttpResponse(render(request, 'flatpages/default.html', context))
+        # Код ниже перенесен в контекстынй процессор context_processors.py
+        # user_timezone = pytz.timezone(request.session.get('django_timezone') or settings.TIME_ZONE)
+        # current_time = timezone.now().astimezone(user_timezone)
+        #
+        # context = {
+        #     'current_time': current_time,
+        #     'timezones': pytz.common_timezones #  добавляем в контекст все доступные часовые пояса
+        # }
+        return HttpResponse(render(request, 'flatpages/default.html', {}))
 
     #  по пост-запросу будем добавлять в сессию часовой пояс, который и будет обрабатываться написанным нами ранее middleware
     def post(self, request):
@@ -92,13 +97,6 @@ class DataMixin:
     для многих представлений"""
     paginate_by = 5
 
-    def get_user_context(self, **kwargs):
-        context = kwargs
-        context = {
-            'current_time': djangotz.now(),
-            'timezones': pytz.common_timezones  # добавляем в контекст все доступные часовые пояса
-        }
-        return context
 
 class PostsList(DataMixin, ListView):
     """Представление возвращает список публикаций """
@@ -122,9 +120,13 @@ class PostsList(DataMixin, ListView):
         в группу authors. Далее можно использовать данную переменную в любом шаблоне, например, posts.html """
         context = super().get_context_data(**kwargs)
         context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
-
-
+        # user_context = self.get_user_context()  # из миксина
+        # context = dict(list(context.items()) + list(user_context.items()))
         return context
+
+    # def post(self, request, *args, **kwargs):
+    #     request.session['django_timezone'] = request.POST['timezone']
+    #     return redirect('home_news')
 
 
 class PostDetail(DetailView):
@@ -346,8 +348,8 @@ class ProfileUserUpdate(LoginRequiredMixin, DataMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         # print(self.request.user.pk)
         context['subscribes']=Category.objects.filter(subscribers__username=self.request.user).values('name_category')
-        user_context = self.get_user_context() # из миксина
-        context = dict(list(context.items()) + list(user_context.items()))
+        # user_context = self.get_user_context() # из миксина
+        # context = dict(list(context.items()) + list(user_context.items()))
         return context
 
     def post(self, request, *args, **kwargs):

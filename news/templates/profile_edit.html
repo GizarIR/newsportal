@@ -12,11 +12,13 @@
 {% if request.user.id != profile.id %}
     <h3 style="color: red">{% trans "You do not have access rights to this information!" %}</h3>
 {% elif request.user.id == profile.id %}
+
+    <!--Locale band-->
     <div class="nav-item">
         {% get_current_timezone as TIME_ZONE %}
         <form action="" method="POST">
             {% csrf_token %}
-            <label for="timezone">Time zone:</label>
+            <label for="timezone">{%  trans 'Time zone:'%}</label>
             <select name="timezone">
                 {% for tz in timezones %}
                 <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected{% endif %}>{{ tz }}</option>
@@ -28,6 +30,7 @@
         {{ current_time|timezone:TIME_ZONE }} <!-- Отображаем время в выбранном часовом поясе  -->
     </div>
     <!--END Locale band -->
+    <!--Information of subscribe-->
     <hr>
     <div>
         <h5>{% trans "Subscription Information" %}</h5>
@@ -37,7 +40,8 @@
             {% endfor %}
         </p>
     </div>
-     <!--Form Profile User-->
+
+    <!--Form Profile User-->
     <hr>
     <div>
         <form action="" method="post">
