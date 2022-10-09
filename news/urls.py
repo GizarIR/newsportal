@@ -25,7 +25,7 @@ from django.views.decorators.cache import cache_page
 urlpatterns = [
     # path('test/', index_test, name='index_test'),
     # path('test/', IndexTrans.as_view(), name='index_test'),
-    path('test/', IndexTimezone.as_view(), name='index_test'),
+    # path('test/', IndexTimezone.as_view(), name='index_test'),
     path('', cache_page (3 * 1) (PostsList.as_view()), name='home'),
     path('news/', cache_page (3 * 1) (PostsList.as_view()), name='home_news'),
     # path('<int:pk>', cache_page (60 * 5) (PostDetail.as_view()), name='post_detail'), # переключено на API cache

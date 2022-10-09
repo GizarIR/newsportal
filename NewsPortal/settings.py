@@ -81,6 +81,7 @@ INSTALLED_APPS = [
 #    модуль за запуска задач по расписанию
     'django_apscheduler',
     'rest_framework',
+    'restapp',
 ]
 
 
@@ -99,6 +100,7 @@ MIDDLEWARE = [
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     # подключаем созданный по инструкции мидлваре для локализации времени
     'news.middlewares.TimezoneMiddleware',
+
 ]
 
 ROOT_URLCONF = 'NewsPortal.urls'
