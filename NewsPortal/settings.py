@@ -80,7 +80,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 #    модуль за запуска задач по расписанию
     'django_apscheduler',
-
+    'rest_framework',
 ]
 
 
