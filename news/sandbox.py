@@ -2,6 +2,9 @@
 from django import template
 import string
 
+# для работы REST API надо импортировать drf_yasg и rest_framework
+# для лучшего понимания лучше написать на функциях, потом дженерики а потом включить rest_framework
+
 forbidden_words = ['редиска', 'гад', 'дурак', 'урод', 'пиппит']
 register = template.Library()
 @register.filter
