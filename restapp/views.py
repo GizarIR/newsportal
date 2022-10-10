@@ -7,8 +7,12 @@ from news.models import *
 
 # Create your views here.
 
-class PostViewset(viewsets.ModelViewSet):
-    queryset = Post.objects.all()
+class NewsViewset(viewsets.ModelViewSet):
+    queryset = Post.objects.all().filter(post_type='NW')
+    serializer_class = PostSerializer
+
+class ArticleViewset(viewsets.ModelViewSet):
+    queryset = Post.objects.all().filter(post_type='AR')
     serializer_class = PostSerializer
 
 class CategoryViewset(viewsets.ModelViewSet):

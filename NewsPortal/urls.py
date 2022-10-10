@@ -20,7 +20,8 @@ from rest_framework import routers
 from restapp import views
 
 router = routers.DefaultRouter()
-router.register(r'news', views.PostViewset)
+router.register(r'news', views.NewsViewset)
+router.register(r'articles', views.ArticleViewset)
 router.register(r'categories', views.CategoryViewset)
 router.register(r'authors', views.AuthorViewset)
 router.register(r'users', views.UserViewset)
