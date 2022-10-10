@@ -22,6 +22,9 @@ from restapp import views
 router = routers.DefaultRouter()
 router.register(r'news', views.PostViewset)
 router.register(r'categories', views.CategoryViewset)
+router.register(r'authors', views.AuthorViewset)
+router.register(r'users', views.UserViewset)
+
 
 
 urlpatterns = [
