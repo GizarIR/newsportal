@@ -66,8 +66,8 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
             'is_created',
         ]
 
-    # def create(self, validated_data):
-    #     category = validated_data.pop('category_id')
-    #     post = Post.objects.create(category=category,**validated_data)
-    #     return post
+    def create(self, validated_data):
+        category = validated_data.pop('category_id')
+        post = Post.objects.create(category=category,**validated_data)
+        return post
 
