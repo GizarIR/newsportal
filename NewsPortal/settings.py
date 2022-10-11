@@ -288,7 +288,7 @@ CACHES = {
 REST_FRAMEWORK = {
    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-   'PAGE_SIZE': 3,
+   'PAGE_SIZE': 5,
     # настройка что для доступа ко всем ViewSet ам требует аутентификация
     #     # ВАЖНО: permission_classes переопределяет стандартное значение в DEFAULT_PERMISSION_CLASSES, а значит,
     #     # если мы хотим отменить, то достаточно переопределить как permission_classes=[permissions.AllowAny]

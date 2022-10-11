@@ -14,6 +14,11 @@ class ReadOnly(BasePermission):
     def has_permission(self, request, view):
         return request.method in SAFE_METHODS # кортеж методов GET HEAD OPTIONS
 
+# class PostViewset(viewsets.ModelViewSet):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+
+
 class NewsViewset(viewsets.ModelViewSet):
     queryset = Post.objects.all().filter(post_type='NW')
     serializer_class = PostSerializer

@@ -36,6 +36,7 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
             # "subscribers",
         ]
 
+
 class PostSerializer(serializers.HyperlinkedModelSerializer):
     category = CategorySerializer(many=True, read_only=True)
     category_id = serializers.PrimaryKeyRelatedField(
@@ -48,7 +49,6 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         queryset=Author.objects.all(),
         write_only = True
     )
-
 
     class Meta:
         model = Post
@@ -67,7 +67,17 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
     def create(self, validated_data):
-        category = validated_data.pop('category_id')
-        post = Post.objects.create(category=category,**validated_data)
+        category = validated_data.pop('category_id', None)
+        author_user = validated_data.pop('author_user_id', None)
+        post = Post.objects.create(author_user=author_user ,**validated_data)
+        post.category.add(category.id)
+        post.save()
+        # post.category_set.set([categories])
+        # student.course_set.set([course])
+        # if categories:
+        #     for cat in categories:
+        #         new_cat, _ = Category.get_or_create(name_category=cat.get('name_category'))
+        #         post.category.add(new_cat.id)
+        # post.save()
         return post
 
