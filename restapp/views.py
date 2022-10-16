@@ -5,7 +5,7 @@ from rest_framework import permissions
 from .serializers import *
 from news.models import *
 
-from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
+from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS, IsAuthenticatedOrReadOnly
 
 # Create your views here.
 
@@ -21,6 +21,7 @@ from rest_framework.response import Response
 # class PostViewset(viewsets.ModelViewSet):
 #     queryset = Post.objects.all()
 #     serializer_class = PostSerializer
+#     permission_classes = [IsAuthenticatedOrReadOnly]
 #
 #     # def get_permissions(self):
 #     #     """
